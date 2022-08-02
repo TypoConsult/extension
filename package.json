@@ -1,11 +1,9 @@
 {
-    "name": "extension-cli",
+    "name": "@typoconsult/extension",
     "version": "1.0.0",
     "description": "A CLI tool for helping with all the boring extension setup stuff when working with a TYPO3 project.",
     "main": "bin/index.js",
-    "bin": {
-        "extension": "./bin/index.js"
-    },
+    "bin": "bin/index.js",
     "scripts": {
         "start": "npm run build && node ./bin/index.js",
         "build": "tsc -p ."
