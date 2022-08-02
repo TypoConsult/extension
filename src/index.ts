@@ -30,7 +30,14 @@ inquirer
             name: 'extensionKey',
             message: 'Enter extension key',
             type: "input",
-            default: 'tc_base'
+            default: 'tc_base',
+            validate(input: string): boolean | string {
+                if (!input.startsWith('tc_')) return 'Extension key must start with "tc_"'
+                if (input.toLowerCase() !== input) return 'Extension key may not include uppercase letters'
+                if (!/^[a-z]+(?:_[a-z]+)*$/gm.test(input)) return 'Extension key must be in snake_case format'
+
+                return true;
+            }
         },
         {
             name: 'objectName',
