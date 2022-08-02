@@ -1,0 +1,10 @@
+# Node
+node_modules
+
+# Build
+bin
+
+# Misc
+.idea
+.DS_Store
+**/.DS_Store

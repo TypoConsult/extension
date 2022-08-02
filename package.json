@@ -1,0 +1,28 @@
+{
+    "name": "extension-cli",
+    "version": "1.0.0",
+    "description": "A CLI tool for helping with all the boring extension setup stuff when working with a TYPO3 project.",
+    "main": "bin/index.js",
+    "bin": {
+        "extension": "./bin/index.js"
+    },
+    "scripts": {
+        "start": "npm run build && node ./bin/index.js",
+        "build": "tsc -p ."
+    },
+    "author": {
+        "name": "Robin Louis van Komen"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "chalk": "^4.1.2",
+        "clear": "^0.1.0",
+        "inquirer": "^8.2.4"
+    },
+    "devDependencies": {
+        "@types/clear": "^0.1.2",
+        "@types/inquirer": "^8.2.1",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.7.4"
+    }
+}
