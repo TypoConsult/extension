@@ -1,16 +1,22 @@
 {
     "name": "@typoconsult/extension",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A CLI tool for helping with all the boring extension setup stuff when working with a TYPO3 project.",
     "main": "bin/index.js",
     "bin": "bin/index.js",
     "scripts": {
-        "start": "npm run build && node ./bin/index.js",
+        "start": "node ./bin/index.js",
+        "dev": "npm run build && node ./bin/index.js",
+        "prepare": "npm run build",
         "build": "tsc -p ."
     },
     "author": {
         "name": "Robin Louis van Komen"
     },
+    "files": [
+        "bin",
+        "templates"
+    ],
     "license": "ISC",
     "dependencies": {
         "chalk": "^4.1.2",
