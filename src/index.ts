@@ -10,6 +10,11 @@ clear();
 
 console.log(chalk.hex('#FF8700').bold('TYPO3 Extension Utility CLI'))
 
+const parsers = {
+    [ActionTypes.EXTENSION]: ExtensionParser,
+    [ActionTypes.OBJECT]: ObjectParser
+}
+
 inquirer
     .prompt([
         {
@@ -35,12 +40,9 @@ inquirer
         }
     ])
     .then(async (input: InputInterface) => {
-        const parsers = {
-            [ActionTypes.EXTENSION]: new ExtensionParser(),
-            [ActionTypes.OBJECT]: new ObjectParser()
-        }
+        const parser = new parsers[input.action](input)
 
-        await parsers[input.action].parse(input);
+        await parser.parse();
     })
     .catch(error => {
         console.log(chalk.bold.red('Something went wrong...'));
