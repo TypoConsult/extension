@@ -1,0 +1,47 @@
+lib {
+    contentElement {
+        settings {
+            addClass {
+                {{extensionNameClean}}_plugin = {$plugin.{{extensionNamePrefixed}}.settings.className}
+            }
+        }
+    }
+}
+
+plugin {
+    {{extensionNamePrefixed}} {
+        view {
+            templateRootPaths {
+                10 = {$plugin.{{extensionNamePrefixed}}.view.templateRootPath}
+            }
+
+            partialRootPaths {
+                10 = {$plugin.{{extensionNamePrefixed}}.view.partialRootPath}
+            }
+
+            layoutRootPaths {
+                10 = {$plugin.{{extensionNamePrefixed}}.view.layoutRootPath}
+            }
+        }
+
+        settings {
+            generalWidth = {$styles.variables.generalWidth}
+            tabletMaxWidth = {$styles.variables.tabletMaxWidth}
+            tabletMinWidth = {$styles.variables.tabletMinWidth}
+
+            stylesPaths {
+                10 = {$plugin.{{extensionNamePrefixed}}.settings.stylesPaths.10}
+            }
+
+            javascriptPaths {
+                10 = {$plugin.{{extensionNamePrefixed}}.settings.javascriptPaths.10}
+            }
+
+            className = {$plugin.{{extensionNamePrefixed}}.settings.className}
+        }
+
+        persistence {
+            storagePid = {$plugin.{{extensionNamePrefixed}}.persistence.storagePid}
+        }
+    }
+}

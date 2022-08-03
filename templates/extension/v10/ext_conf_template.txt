@@ -1,0 +1,2 @@
+# cat=basic/enable; type=options[common,menu,special,forms,plugins]; label=Select the tab for the plugin int the wizard items
+{{extensionNameClean}}_plugin_wizardItemsTab = plugins

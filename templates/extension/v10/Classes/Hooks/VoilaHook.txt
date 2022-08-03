@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace TYPOCONSULT\{{extensionNamePascal}}\Hooks;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPOCONSULT\{{extensionNamePascal}}\Factory\CommonFactory;
+use TYPOCONSULT\TcSys\Utility\VoilaUtility;
+
+class VoilaHook
+{
+    protected const EXTENSION_KEY = '{{extensionNameSnake}}';
+
+    /**
+     * @param array $params
+     *
+     * @return string
+     */
+    public function addAdditionalPreview(array $params): string
+    {
+        $preview = '';
+
+        if ($params['element']->getCtype() == '{{extensionNameClean}}_plugin') {
+            $commonFactory = GeneralUtility::makeInstance(CommonFactory::class);
+            $element = $commonFactory->getContentRepository()->findByUidRaw($params['element']->getUid());
+
+            if ($element) {
+                if ($element->getBodytext()) {
+                    $preview .= VoilaUtility::renderBodytext($element);
+                }
+            }
+        }
+
+        return $preview;
+    }
+}

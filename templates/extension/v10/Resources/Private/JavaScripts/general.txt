@@ -1,0 +1,13 @@
+;(function () {
+    var tabletMinWidth = parseInt('###tabletMinWidth###');
+    var tabletMaxWidth = parseInt('###tabletMaxWidth###');
+    var windowWidth = document.getElementsByTagName('body')[0].clientWidth;
+
+    function doWhatEver() {
+
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        doWhatEver();
+    });
+}());

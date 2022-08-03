@@ -1,0 +1,25 @@
+plugin {
+    {{extensionNamePrefixed}} {
+        view {
+            templateRootPath = EXT:{{extensionNameSnake}}/Resources/Private/Templates/
+            partialRootPath = EXT:{{extensionNameSnake}}/Resources/Private/Partials/
+            layoutRootPath = EXT:{{extensionNameSnake}}/Resources/Private/Layouts/
+        }
+
+        settings {
+            stylesPaths {
+                10 = EXT:{{extensionNameSnake}}/Resources/Private/StyleSheets/general.scss
+            }
+
+            javascriptPaths {
+                10 = EXT:{{extensionNameSnake}}/Resources/Private/JavaScripts/general.js
+            }
+
+            className = tx-{{extensionNameKebab}}
+        }
+
+        persistence {
+            storagePid =
+        }
+    }
+}
