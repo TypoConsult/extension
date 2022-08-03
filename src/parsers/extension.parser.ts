@@ -1,11 +1,13 @@
-import { ParserInterface } from '../types/parser.types';
-import { InputInterface } from '../types/general.types';
-import { getExtensionNameVariants } from '../utils/extension.utils';
-import { ExtensionNameVariants } from '../types/extension.types';
-import { mkdir, readFile, writeFile } from 'fs/promises';
-import { basename, dirname, join } from 'path';
+import archiver from 'archiver';
 import chalk from 'chalk';
+import { createWriteStream } from 'fs';
+import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import glob from 'glob';
+import { basename, dirname, join } from 'path';
+import { ExtensionNameVariants } from '../types/extension.types';
+import { InputInterface } from '../types/general.types';
+import { ParserInterface } from '../types/parser.types';
+import { getExtensionNameVariants } from '../utils/extension.utils';
 
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
@@ -41,6 +43,8 @@ class ExtensionParser implements ParserInterface {
     public async parse(): Promise<void> {
         await this.createExtensionFolder();
         await this.createFilesFromTemplate();
+
+        if (this.input.zip) await this.convertToZip();
     }
 
     private async createExtensionFolder(): Promise<void> {
@@ -89,6 +93,37 @@ class ExtensionParser implements ParserInterface {
             extensionRelativeDirName,
             `${this.replacePlaceholders(fileBaseName)}${destinationExtension && `.${destinationExtension}`}`
         );
+    }
+
+    private async convertToZip() {
+        const outputFileNameParts = [
+            this.extensionNameVariants.snake,
+            `${this.input.version}.0.0`,
+            ExtensionParser.getExtensionZipFileDateString()
+        ];
+        const output = createWriteStream(`./${outputFileNameParts.join('_')}.zip`);
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+
+        archive.pipe(output);
+        archive.glob(`${this.extensionNameVariants.snake}/**/*`);
+
+        await archive.finalize();
+
+        await rm(`./${this.extensionNameVariants.snake}`, { recursive: true });
+    }
+
+    private static getExtensionZipFileDateString(): string {
+        const now = new Date();
+
+        return [
+            now.getFullYear(),
+            ('0' + (now.getMonth() + 1)).slice(-2),
+            ('0' + now.getDate()).slice(-2),
+            ('0' + now.getHours()).slice(-2),
+            ('0' + now.getMinutes()).slice(-2)
+        ].join('');
     }
 }
 
