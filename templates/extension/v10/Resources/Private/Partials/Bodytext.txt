@@ -1,5 +1,0 @@
-<f:variable name="bodytext" value="{content.bodytext}"/>
-
-<f:if condition="{bodytext}">
-    {bodytext -> f:format.html()}
-</f:if>

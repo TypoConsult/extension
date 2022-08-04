@@ -1,9 +1,8 @@
 import archiver from 'archiver';
 import chalk from 'chalk';
 import { createWriteStream } from 'fs';
-import { mkdir, readFile, rm, writeFile } from 'fs/promises';
-import glob from 'glob';
-import { basename, dirname, join } from 'path';
+import { mkdir, rm, writeFile } from 'fs/promises';
+import { dirname, join } from 'path';
 import { ExtensionNameVariants } from '../types/extension.types';
 import { InputInterface } from '../types/general.types';
 import { ParserInterface } from '../types/parser.types';
@@ -12,35 +11,15 @@ import { getExtensionNameVariants } from '../utils/extension.utils';
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
     private readonly rootTemplateFolder: string;
-    private readonly templateFiles: string[];
-
-    // default generated file extension is .php
-    private readonly fileExtensionMap: { [key: string]: string } = {
-        'Configuration/Services': 'yaml',
-        'Configuration/TypoScript/constants': 'typoscript',
-        'Configuration/TypoScript/setup': 'typoscript',
-        'Resources/Private/JavaScripts/general': 'js',
-        'Resources/Private/Language/da.locallang': 'xlf',
-        'Resources/Private/Language/da.locallang_db': 'xlf',
-        'Resources/Private/Language/locallang': 'xlf',
-        'Resources/Private/Language/locallang_db': 'xlf',
-        'Resources/Private/Partials/Bodytext': 'html',
-        'Resources/Private/Plugin/Show': 'html',
-        'Resources/Private/StyleSheets/general': 'scss',
-        'Resources/Public/Icons/extensions-{{extensionNameClean}}_plugin': 'svg',
-        'composer': 'json',
-        'ext_conf_template': 'txt',
-        'ext_icon': 'svg',
-        'ext_tables.sql': ''
-    };
+    private template: { [key: string]: string } = {};
 
     constructor(private readonly input: InputInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
         this.rootTemplateFolder = `templates/extension/v${this.input.version}`;
-        this.templateFiles = glob.sync(`${this.rootTemplateFolder}/**/*.txt`);
     }
 
     public async parse(): Promise<void> {
+        await this.initializeTemplate();
         await this.createExtensionFolder();
         await this.createFilesFromTemplate();
 
@@ -56,22 +35,16 @@ class ExtensionParser implements ParserInterface {
     }
 
     private async createFilesFromTemplate() {
-        for (const templateFile of this.templateFiles) {
-            const destination = this.getDestinationFromTemplateFile(templateFile);
-            const replacedContents = await this.getParsedTemplateFileContents(templateFile);
+        for (const filePath in this.template) {
+            const destination = this.getDestinationFromTemplate(filePath);
+            const replacedContents = this.getParsedContentFromTemplate(this.template[filePath]);
 
             await mkdir(dirname(destination), { recursive: true });
             await writeFile(destination, replacedContents);
         }
     }
 
-    private async getParsedTemplateFileContents(templateFile: string) {
-        const contents = await readFile(templateFile, 'utf-8');
-
-        return this.replacePlaceholders(contents);
-    }
-
-    private replacePlaceholders(input: string) {
+    private replacePlaceholders(input: string): string {
         return input
             .replaceAll('{{extensionNameClean}}', this.extensionNameVariants.clean)
             .replaceAll('{{extensionNameKebab}}', this.extensionNameVariants.kebab)
@@ -81,18 +54,18 @@ class ExtensionParser implements ParserInterface {
             .replaceAll('{{extensionNameSnake}}', this.extensionNameVariants.snake);
     }
 
-    private getDestinationFromTemplateFile(templateFile: string) {
-        const fileDirName = dirname(templateFile);
-        const fileBaseName = basename(templateFile, '.txt');
-        const extensionRelativeDirName = fileDirName.replace(this.rootTemplateFolder, '').replace('/', '');
-        const destinationExtension = this.fileExtensionMap[join(extensionRelativeDirName, fileBaseName)] ?? 'php';
-
+    private getDestinationFromTemplate(filePath: string): string {
         return join(
             '.',
             this.extensionNameVariants.snake,
-            extensionRelativeDirName,
-            `${this.replacePlaceholders(fileBaseName)}${destinationExtension && `.${destinationExtension}`}`
+            this.replacePlaceholders(filePath)
         );
+    }
+
+    private getParsedContentFromTemplate(template: string): string {
+        return this.replacePlaceholders(template)
+                   .trim()
+                   .replace(/^ {8}/gm, '');
     }
 
     private async convertToZip() {
@@ -124,6 +97,12 @@ class ExtensionParser implements ParserInterface {
             ('0' + now.getHours()).slice(-2),
             ('0' + now.getMinutes()).slice(-2)
         ].join('');
+    }
+
+    private async initializeTemplate() {
+        const { default: template } = await import(`../templates/extension/v${this.input.version}`);
+
+        this.template = template;
     }
 }
 
