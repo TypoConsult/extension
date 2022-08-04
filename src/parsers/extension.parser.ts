@@ -28,9 +28,9 @@ class ExtensionParser implements ParserInterface {
 
     private async createExtensionFolder(): Promise<void> {
         try {
-            await mkdir(`./${this.extensionNameVariants.snake}`);
+            await mkdir(`./${this.getOutputFolderName()}`);
         } catch (e) {
-            console.log(chalk.red(`A folder called "${this.extensionNameVariants.snake}" already exists in this location`));
+            console.log(chalk.red(`A folder called "${this.getOutputFolderName()}" already exists in this location`));
         }
     }
 
@@ -57,7 +57,7 @@ class ExtensionParser implements ParserInterface {
     private getDestinationFromTemplate(filePath: string): string {
         return join(
             '.',
-            this.extensionNameVariants.snake,
+            this.getOutputFolderName(),
             this.replacePlaceholders(filePath)
         );
     }
@@ -69,22 +69,23 @@ class ExtensionParser implements ParserInterface {
     }
 
     private async convertToZip() {
-        const outputFileNameParts = [
-            this.extensionNameVariants.snake,
+        const outputZipFolderNameParts = [
+            this.getOutputFolderName(),
             `${this.input.version}.0.0`,
             ExtensionParser.getExtensionZipFileDateString()
         ];
-        const output = createWriteStream(`./${outputFileNameParts.join('_')}.zip`);
+
+        const output = createWriteStream(`${outputZipFolderNameParts.join('_')}.zip`);
         const archive = archiver('zip', {
             zlib: { level: 9 }
         });
 
         archive.pipe(output);
-        archive.glob(`${this.extensionNameVariants.snake}/**/*`);
+        archive.directory(this.getOutputFolderName(), false);
 
         await archive.finalize();
 
-        await rm(`./${this.extensionNameVariants.snake}`, { recursive: true });
+        await rm(`./${this.getOutputFolderName()}`, { recursive: true });
     }
 
     private static getExtensionZipFileDateString(): string {
@@ -103,6 +104,10 @@ class ExtensionParser implements ParserInterface {
         const { default: template } = await import(`../templates/extension/v${this.input.version}`);
 
         this.template = template;
+    }
+
+    private getOutputFolderName() {
+        return this.extensionNameVariants.snake;
     }
 }
 
