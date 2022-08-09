@@ -21,3 +21,5 @@ export const upperCaseFirst = (input: string): string => {
     return input.slice(0, 1).toUpperCase() + input.slice(1, input.length);
 };
 
+export const generateRandomHexColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16);
+

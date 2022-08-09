@@ -3,10 +3,10 @@ export enum ActionTypes {
     OBJECT
 }
 
-export interface InputInterface {
+export interface SharedInputInterface {
     action: ActionTypes;
     extensionKey: string;
-    objectName?: string;
     version: 10;
-    zip?: boolean;
 }
+
+export type StringObject = { [key: string]: string }
