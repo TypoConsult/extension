@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-import clear from 'clear';
 import chalk from 'chalk';
+import clear from 'clear';
 import inquirer from 'inquirer';
-import { ActionTypes, InputInterface } from './types/general.types';
 import ExtensionParser from './parsers/extension.parser';
 import ObjectParser from './parsers/object.parser';
+import { ExtensionInputInterface } from './types/extension.types';
+import { ActionTypes } from './types/general.types';
+import { ObjectInputInterface } from './types/object.types';
+import { isEmpty, isLowercase, isSnakeCase } from './utils/validation.utils';
 
 clear();
 
@@ -28,25 +31,25 @@ inquirer
                 ]
             },
             {
-                name: 'extensionKey',
-                message: 'Enter extension key',
-                type: 'input',
-                default: 'tc_base',
-                validate(input: string): boolean | string {
-                    if (!input.startsWith('tc_')) return 'Extension key must start with "tc_"';
-                    if (input.toLowerCase() !== input) return 'Extension key may not include uppercase letters';
-                    if (!/^[a-z]+(?:_[a-z]+)*$/gm.test(input)) return 'Extension key must be in snake_case format';
-
-                    return true;
-                }
-            },
-            {
                 name: 'version',
                 message: 'TYPO3 target version',
                 type: 'list',
                 choices: [
                     { name: 'v10', value: 10 }
                 ]
+            },
+            {
+                name: 'extensionKey',
+                message: 'Enter extension key',
+                type: 'input',
+                default: 'tc_base',
+                validate(input: string): boolean | string {
+                    if (!input.startsWith('tc_')) return 'Extension key must start with "tc_"';
+                    if (!isLowercase(input)) return 'Extension key must include only lowercase letters';
+                    if (!isSnakeCase(input)) return 'Extension key must be in snake_case format';
+
+                    return true;
+                }
             },
             {
                 name: 'zip',
@@ -58,12 +61,19 @@ inquirer
                 name: 'objectName',
                 message: 'Enter object name',
                 type: 'input',
-                when: ({ action }) => action === ActionTypes.OBJECT
+                when: ({ action }) => action === ActionTypes.OBJECT,
+                validate(input: string): boolean | string {
+                    if (isEmpty(input)) return 'Object name cannot be empty string';
+                    if (!isLowercase(input)) return 'Object name must include only lowercase letters';
+                    if (!isSnakeCase(input)) return 'Object name must be in snake_case format';
+
+                    return true;
+                }
             }
         ]
     )
-    .then(async (input: InputInterface) => {
-        const parser = new parsers[input.action](input);
+    .then(async (input: ExtensionInputInterface | ObjectInputInterface) => {
+        const parser = new parsers[input.action](input as any);
 
         await parser.parse();
     })

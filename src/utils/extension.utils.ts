@@ -9,3 +9,13 @@ export const getExtensionNameVariants = (extensionKey: string): ExtensionNameVar
     pretty: convertSnakeCaseToPretty(extensionKey),
     snake: extensionKey
 });
+
+export const replaceExtensionNamePlaceholders = (input: string, extensionNameVariants: ExtensionNameVariants): string => {
+    return input
+        .replaceAll('{{extensionNameClean}}', extensionNameVariants.clean)
+        .replaceAll('{{extensionNameKebab}}', extensionNameVariants.kebab)
+        .replaceAll('{{extensionNamePascal}}', extensionNameVariants.pascal)
+        .replaceAll('{{extensionNamePrefixed}}', extensionNameVariants.prefixed)
+        .replaceAll('{{extensionNamePretty}}', extensionNameVariants.pretty)
+        .replaceAll('{{extensionNameSnake}}', extensionNameVariants.snake);
+};

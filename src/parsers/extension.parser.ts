@@ -3,17 +3,17 @@ import chalk from 'chalk';
 import { createWriteStream } from 'fs';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
-import { ExtensionNameVariants } from '../types/extension.types';
-import { InputInterface } from '../types/general.types';
+import { ExtensionInputInterface, ExtensionNameVariants } from '../types/extension.types';
+import { StringObject } from '../types/general.types';
 import { ParserInterface } from '../types/parser.types';
-import { getExtensionNameVariants } from '../utils/extension.utils';
+import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from '../utils/extension.utils';
 
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
     private readonly rootTemplateFolder: string;
-    private template: { [key: string]: string } = {};
+    private template: StringObject = {};
 
-    constructor(private readonly input: InputInterface) {
+    constructor(private readonly input: ExtensionInputInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
         this.rootTemplateFolder = `templates/extension/v${this.input.version}`;
     }
@@ -44,28 +44,18 @@ class ExtensionParser implements ParserInterface {
         }
     }
 
-    private replacePlaceholders(input: string): string {
-        return input
-            .replaceAll('{{extensionNameClean}}', this.extensionNameVariants.clean)
-            .replaceAll('{{extensionNameKebab}}', this.extensionNameVariants.kebab)
-            .replaceAll('{{extensionNamePascal}}', this.extensionNameVariants.pascal)
-            .replaceAll('{{extensionNamePrefixed}}', this.extensionNameVariants.prefixed)
-            .replaceAll('{{extensionNamePretty}}', this.extensionNameVariants.pretty)
-            .replaceAll('{{extensionNameSnake}}', this.extensionNameVariants.snake);
-    }
-
     private getDestinationFromTemplate(filePath: string): string {
         return join(
             '.',
             this.getOutputFolderName(),
-            this.replacePlaceholders(filePath)
+            replaceExtensionNamePlaceholders(filePath, this.extensionNameVariants)
         );
     }
 
     private getParsedContentFromTemplate(template: string): string {
-        return this.replacePlaceholders(template)
-                   .trim()
-                   .replace(/^ {8}/gm, '');
+        return replaceExtensionNamePlaceholders(template, this.extensionNameVariants)
+            .trim()
+            .replace(/^ {8}/gm, '');
     }
 
     private async convertToZip() {
