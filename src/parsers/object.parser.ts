@@ -64,15 +64,16 @@ class ObjectParser implements ParserInterface {
             process.exit();
         }
 
-        for (const filePath in this.template?.create) {
-            const destinationFilePath = this.getExtensionFilePath(filePath);
+        const fileState = await Promise.all(
+            Object.keys(this.template.create)
+                  .map(filePath => access(this.getExtensionFilePath(filePath))
+                      .then(() => true)
+                      .catch(() => false))
+        );
 
-            try {
-                await access(destinationFilePath);
-
-                console.log(chalk.red.bold(`Target extension already contains target file '${destinationFilePath}'`));
-                process.exit();
-            } catch (e) {}
+        if (!fileState.every(element => !element)) {
+            console.log(chalk.red.bold(`Target object '${this.objectNameVariants.pascal}' already seem to exist in this extension.`));
+            process.exit();
         }
     }
 
