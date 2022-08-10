@@ -68,6 +68,27 @@ const template: ObjectTemplate = {
             {
                 public const TABLE_NAME = '{{objectTableName}}';
                 
+                /**
+                 * @var string 
+                 */
+                protected string $title = '';
+                
+                /**
+                 * @return string
+                 */
+                public function getTitle(): string
+                {
+                    return $this->title;
+                }
+            
+                /**
+                 * @param string $title
+                 */
+                public function setTitle(string $title): void
+                {
+                    $this->title = $title;
+                }
+                
                 ####################
                 ## Helper methods ##
                 ####################
