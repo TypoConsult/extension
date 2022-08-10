@@ -24,8 +24,6 @@ class ObjectParser implements ParserInterface {
         await this.validateTargetObject();
         await this.createFiles();
         await this.appendToFiles();
-
-        // TODO: if object name is multiple words, map model to tableName in extbase
     }
 
     private async initializeTemplate() {
@@ -95,6 +93,10 @@ class ObjectParser implements ParserInterface {
         if (!this.template?.append) return;
 
         for (const filePath in this.template.append) {
+            const conditionFunction = this.template.append[filePath].condition;
+
+            if (conditionFunction && !conditionFunction(this.objectNameVariants)) continue;
+
             const destination = this.getExtensionFilePath(filePath);
 
             try {
@@ -104,31 +106,35 @@ class ObjectParser implements ParserInterface {
                 process.exit();
             }
 
+            const {
+                appendString,
+                content: templateContent,
+                insertAtEndOfFile,
+                insertBefore,
+                prependString,
+                spacesToRemove
+            } = this.template.append[filePath];
             const buffer = await readFile(destination);
             let content = buffer.toString();
 
-            if (this.template.append[filePath].insertAtEndOfFile) {
+            if (insertAtEndOfFile) {
                 if (content !== '') content += '\n\n';
 
-                content += this.getParsedContentFromTemplate(this.template.append[filePath].content, 16);
+                content += this.getParsedContentFromTemplate(templateContent, spacesToRemove);
             }
 
-            if (this.template.append[filePath].insertBefore) {
-                const searchWord = this.template.append[filePath].insertBefore;
-
-                if (!searchWord) return;
-
-                const targetIndex = content.indexOf(searchWord);
+            if (insertBefore) {
+                const targetIndex = content.indexOf(insertBefore);
 
                 if (targetIndex === -1) {
-                    console.log(chalk.red.bold(`Configured insert position '${searchWord}' was not found`));
+                    console.log(chalk.red.bold(`Configured insert position '${insertBefore}' was not found`));
                     process.exit();
                 }
 
                 content = content.slice(0, targetIndex)
-                    + '\n\t\t\t'
-                    + this.getParsedContentFromTemplate(this.template.append[filePath].content, 4)
-                    + '\n\t\t'
+                    + (prependString ?? '')
+                    + this.getParsedContentFromTemplate(templateContent, spacesToRemove)
+                    + (appendString ?? '')
                     + content.slice(targetIndex);
             }
 

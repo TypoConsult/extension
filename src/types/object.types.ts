@@ -5,16 +5,21 @@ export interface ObjectInputInterface extends SharedInputInterface {
 }
 
 export interface ObjectNameVariants {
-    pascal: string,
-    table: string
+    pascal: string;
+    snake: string;
+    table: string;
 }
 
 export interface ObjectTemplate {
     append: {
         [filePath: string]: {
-            content: string,
-            insertBefore?: string,
-            insertAtEndOfFile?: boolean
+            appendString?: string;
+            condition?: (names: ObjectNameVariants) => boolean;
+            content: string;
+            insertAtEndOfFile?: boolean;
+            insertBefore?: string;
+            prependString?: string;
+            spacesToRemove: number;
         }
     },
     create: StringObject
