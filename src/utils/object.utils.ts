@@ -7,6 +7,7 @@ export const getObjectNameVariants = (objectName: string, extensionKey: string):
 
     return {
         pascal: convertSnakeCaseToPascalCase(objectName),
+        snake: objectName,
         table: `tx_${extensionNameVariants.clean}_domain_model_${objectName}`
     };
 };
@@ -14,5 +15,6 @@ export const getObjectNameVariants = (objectName: string, extensionKey: string):
 export const replaceObjectNamePlaceholders = (input: string, objectNameVariants: ObjectNameVariants): string => {
     return input
         .replaceAll('{{objectNamePascal}}', objectNameVariants.pascal)
+        .replaceAll('{{objectNameSnake}}', objectNameVariants.snake)
         .replaceAll('{{objectTableName}}', objectNameVariants.table);
 };

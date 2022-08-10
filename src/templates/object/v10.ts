@@ -2,6 +2,17 @@ import { ObjectTemplate } from '../../types/object.types';
 
 const template: ObjectTemplate = {
     append: {
+        'Configuration/Extbase/Persistence/Classes.php': {
+            content: `
+                TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model\\{{objectNamePascal}}::class => [
+                    'tableName' => '{{objectTableName}}'
+                ]
+            `,
+            insertBefore: '\n];',
+            condition: ({ snake }) => snake.includes('_'),
+            spacesToRemove: 12,
+            prependString: ',\n\t'
+        },
         'Resources/Private/Language/da.locallang_db.xlf': {
             content: `
                 <trans-unit id="{{objectTableName}}">
@@ -11,7 +22,10 @@ const template: ObjectTemplate = {
                     <target>Titel</target>
                 </trans-unit>
             `,
-            insertBefore: '</body>'
+            insertBefore: '</body>',
+            spacesToRemove: 4,
+            prependString: '\n\t\t\t',
+            appendString: '\n\t\t'
         },
         'Resources/Private/Language/locallang_db.xlf': {
             content: `
@@ -22,7 +36,10 @@ const template: ObjectTemplate = {
                     <source>Title</source>
                 </trans-unit>
             `,
-            insertBefore: '</body>'
+            insertBefore: '</body>',
+            spacesToRemove: 4,
+            appendString: '\n\t\t',
+            prependString: '\n\t\t\t'
         },
         'ext_tables.sql': {
             // @formatter:off
@@ -32,7 +49,8 @@ const template: ObjectTemplate = {
                     title VARCHAR(255) DEFAULT '' NOT NULL
                 );
             `,
-            insertAtEndOfFile: true
+            insertAtEndOfFile: true,
+            spacesToRemove: 16
             // @formatter:on
         }
     },
@@ -49,6 +67,27 @@ const template: ObjectTemplate = {
             class {{objectNamePascal}} extends AbstractEntity
             {
                 public const TABLE_NAME = '{{objectTableName}}';
+                
+                /**
+                 * @var string 
+                 */
+                protected string $title = '';
+                
+                /**
+                 * @return string
+                 */
+                public function getTitle(): string
+                {
+                    return $this->title;
+                }
+            
+                /**
+                 * @param string $title
+                 */
+                public function setTitle(string $title): void
+                {
+                    $this->title = $title;
+                }
                 
                 ####################
                 ## Helper methods ##
