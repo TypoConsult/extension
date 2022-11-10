@@ -35,6 +35,7 @@ inquirer
                 message: 'TYPO3 target version',
                 type: 'list',
                 choices: [
+                    { name: 'v11', value: 11 },
                     { name: 'v10', value: 10 }
                 ]
             },
