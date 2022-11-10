@@ -41,19 +41,6 @@ class ObjectParser implements ParserInterface {
             console.log(chalk.red.bold(`Could not find target extension '${extensionKey}' in this location`));
             process.exit();
         }
-
-        try {
-            const buffer = await readFile(`./${extensionKey}/ext_emconf.php`);
-            const content = buffer.toString().replace(/\s/g, '');
-
-            if (!content.includes(`'version'=>'${this.input.version}.`)) {
-                console.log(chalk.red.bold('Target extension does not seem to be compatible with selected version'));
-                process.exit();
-            }
-        } catch (e) {
-            console.log(chalk.red.bold(`Could not find file 'ext_emconf.php' in extension '${extensionKey}'`));
-            process.exit();
-        }
     }
 
     private async validateTargetObject() {
