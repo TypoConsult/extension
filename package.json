@@ -6,7 +6,7 @@
     "bin": "bin/index.js",
     "scripts": {
         "start": "node ./bin/index.js",
-        "dev": "npm run build && node ./bin/index.js",
+        "dev": "npm run build && npm start",
         "prepare": "npm run build",
         "build": "tsc -p ."
     },
