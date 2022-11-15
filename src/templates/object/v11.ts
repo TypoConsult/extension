@@ -136,7 +136,7 @@ const template: ObjectTemplate = {
         'Configuration/TCA/{{objectTableName}}.php': `
             <?php
 
-            defined('TYPO3_MODE') || die('Access denied.');
+            defined('TYPO3') or die('Access denied.');
             
             $extKey = \\TYPOCONSULT\\{{extensionNamePascal}}\\Constants\\GeneralConstants::EXT_KEY;
             $table = \\TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model\\{{objectNamePascal}}::TABLE_NAME;
