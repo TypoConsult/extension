@@ -68,6 +68,9 @@ const template: ObjectTemplate = {
             {
                 public const TABLE_NAME = '{{objectTableName}}';
                 
+                /**
+                 * @var string
+                 */
                 public string $title = '';
             }
         `,
