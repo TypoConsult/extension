@@ -30,7 +30,7 @@ class ExtensionParser implements ParserInterface {
         try {
             await mkdir(`./${this.getOutputFolderName()}`);
         } catch (e) {
-            console.log(chalk.red(`A folder called "${this.getOutputFolderName()}" already exists in this location`));
+            console.log(chalk.red(`"${this.getOutputFolderName()}" already exists in this location`));
         }
     }
 
