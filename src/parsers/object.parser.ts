@@ -89,8 +89,8 @@ class ObjectParser implements ParserInterface {
             try {
                 await access(destination);
             } catch (e) {
-                console.log(chalk.red.bold(`Could not find file '${destination}'`));
-                process.exit();
+                console.log(chalk.red.bold(`Could not find file '${destination}' - skipped`));
+                continue;
             }
 
             const {
