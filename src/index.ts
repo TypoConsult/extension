@@ -41,7 +41,7 @@ inquirer
             },
             {
                 name: 'extensionKey',
-                message: 'Enter extension key',
+                message: 'Enter extension key (snake_case)',
                 type: 'input',
                 default: 'tc_base',
                 validate(input: string): boolean | string {
@@ -60,7 +60,7 @@ inquirer
             },
             {
                 name: 'objectName',
-                message: 'Enter object name',
+                message: 'Enter object name (snake_case)',
                 type: 'input',
                 when: ({ action }) => action === ActionTypes.OBJECT,
                 validate(input: string): boolean | string {
