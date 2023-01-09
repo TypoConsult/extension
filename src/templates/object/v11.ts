@@ -138,6 +138,8 @@ const template: ObjectTemplate = {
         `,
         'Configuration/TCA/{{objectTableName}}.php': `
             <?php
+            
+            declare(strict_types=1);
 
             defined('TYPO3') or die('Access denied.');
             
