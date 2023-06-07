@@ -167,37 +167,6 @@ export default {
             }
         }
     `,
-    'Classes/Factory/CommonFactory.php': `
-        <?php
-
-        declare(strict_types=1);
-        
-        namespace TYPOCONSULT\\{{extensionNamePascal}}\\Factory;
-        
-        use TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Repository\\ContentRepository;
-        
-        class CommonFactory
-        {
-            /**
-             * @var ContentRepository
-             */
-            protected ContentRepository $contentRepository;
-        
-            public function __construct(
-                ContentRepository $contentRepository
-            ) {
-                $this->contentRepository = $contentRepository;
-            }
-        
-            /**
-             * @return ContentRepository
-             */
-            public function getContentRepository(): ContentRepository
-            {
-                return $this->contentRepository;
-            }
-        }
-    `,
     'Classes/Hooks/VoilaHook.php': `
         <?php
 
@@ -206,7 +175,7 @@ export default {
         namespace TYPOCONSULT\\{{extensionNamePascal}}\\Hooks;
         
         use TYPO3\\CMS\\Core\\Utility\\GeneralUtility;
-        use TYPOCONSULT\\{{extensionNamePascal}}\\Factory\\CommonFactory;
+        use TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Repository\\ContentRepository;
         use TYPOCONSULT\\TcSys\\Utility\\VoilaUtility;
         
         class VoilaHook
@@ -221,8 +190,8 @@ export default {
                 $preview = '';
         
                 if ($params['element']->getCtype() == '{{extensionNameClean}}_plugin') {
-                    $commonFactory = GeneralUtility::makeInstance(CommonFactory::class);
-                    $element = $commonFactory->getContentRepository()->findByUidRaw($params['element']->getUid());
+                    $contentRepository = GeneralUtility::makeInstance(ContentRepository::class);
+                    $element = $contentRepository->findByUidRaw($params['element']->getUid());
         
                     if ($element) {
                         if ($element->getBodytext()) {
