@@ -55,7 +55,7 @@ inquirer
                 name: 'zip',
                 message: 'Generate zipped extension?',
                 type: 'confirm',
-                when: ({ action }) => action === ActionTypes.EXTENSION
+                when: ({ action, version }) => action === ActionTypes.EXTENSION && version < 11
             },
             {
                 name: 'objectName',
