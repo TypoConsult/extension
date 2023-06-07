@@ -45,7 +45,6 @@ inquirer
                 type: 'input',
                 default: 'tc_base',
                 validate(input: string): boolean | string {
-                    if (!input.startsWith('tc_')) return 'Extension key must start with "tc_"';
                     if (!isLowercase(input)) return 'Extension key must include only lowercase letters';
                     if (!isSnakeCase(input)) return 'Extension key must be in snake_case format';
 
@@ -56,7 +55,7 @@ inquirer
                 name: 'zip',
                 message: 'Generate zipped extension?',
                 type: 'confirm',
-                when: ({ action }) => action === ActionTypes.EXTENSION
+                when: ({ action, version }) => action === ActionTypes.EXTENSION && version < 11
             },
             {
                 name: 'objectName',
