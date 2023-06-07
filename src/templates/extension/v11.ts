@@ -345,10 +345,6 @@ export default {
         
           TYPOCONSULT\\{{extensionNamePascal}}\\:
             resource: '../Classes/*'
-        
-          TYPOCONSULT\\{{extensionNamePascal}}\\Factory\\:
-            resource: '../Classes/Factory/*'
-            public: true
     `,
     'Resources/Private/JavaScripts/general.js': `
         ;(function () {
