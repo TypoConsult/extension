@@ -453,7 +453,7 @@ export default {
                 }
             },
             "require": {
-                "typo3/cms-core": "^12.4"
+                "typo3/cms-core": "^12."
             }
         }
     `,
@@ -468,7 +468,7 @@ export default {
         # cat=basic/enable; type=options[common,menu,special,forms,plugins]; label=Select the tab for the plugin int the wizard items
         {{extensionNameClean}}_plugin_wizardItemsTab = plugins
     `,
-    'ext_icon.svg': `
+    'Resources/Public/Icons/Extension.svg': `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
             <rect fill="#ff8700" height="100%" width="100%"/>
             <text fill="#ffffff" font-family="sans-serif" font-size="320" x="12.5%" y="68.75%" textLength="75%" lengthAdjust="spacingAndGlyphs">TC</text>
