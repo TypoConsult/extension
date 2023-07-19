@@ -1,7 +1,7 @@
 export default {
     'Classes/Constants/GeneralConstants.php': `
         <?php
-    
+
         declare(strict_types=1);
         
         namespace TYPOCONSULT\\{{extensionNamePascal}}\\Constants;
@@ -203,6 +203,18 @@ export default {
                 return $preview;
             }
         }
+    `,
+    'Configuration/Icons.php': `
+        <?php
+
+        declare(strict_types=1);
+
+        use TYPOCONSULT\TcFrontend\Constants\GeneralConstants;
+        use TYPOCONSULT\TcTools\Services\IconLoaderService;
+
+        $iconLoaderService = new IconLoaderService(GeneralConstants::EXT_KEY);
+
+        return $iconLoaderService->readIconsFromFolder()->getIconsForIconsFile();
     `,
     'Configuration/Extbase/Persistence/Classes.php': `
         <?php
@@ -524,17 +536,5 @@ export default {
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tc_sys']['addAdditionalPreview'][] = \\TYPOCONSULT\\{{extensionNamePascal}}\\Hooks\\VoilaHook::class . '->addAdditionalPreview';
         })();
     `,
-    'ext_tables.sql': ``,
-    'ext_tables.php': `
-        <?php
-
-        defined('TYPO3') or die('Access denied.');
-        
-        (function () {
-            \\TYPOCONSULT\\TcSys\\Utility\\CommonUtility::loadIcons(
-                \\TYPOCONSULT\\{{extensionNamePascal}}\\Constants\\GeneralConstants::EXT_KEY, 
-                'Resources/Public/Icons/'
-            );
-        })();
-    `
+    'ext_tables.sql': ``
 };
