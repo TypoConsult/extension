@@ -9,8 +9,7 @@ export default {
         class GeneralConstants
         {
             public const EXT_KEY = '{{extensionNameSnake}}';
-        }
-    `,
+        }`,
     'Classes/Controller/PluginController.php': `
         <?php
 
