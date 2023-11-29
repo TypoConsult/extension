@@ -16,15 +16,15 @@ export default {
         declare(strict_types=1);
         
         namespace TYPOCONSULT\\{{extensionNamePascal}}\\Controller;
-        
+
         use TYPO3\\CMS\\Core\\Http\\HtmlResponse;
         use TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ActionController;
         use TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Repository\\ContentRepository;
-        
+
         class PluginController extends ActionController
         {
             private array $cObjData = [];
-            
+
             public function __construct(protected ContentRepository $contentRepository)
             {
             }
@@ -41,7 +41,7 @@ export default {
                 if ($content) {
                     $this->view->assign('content', $content);
                 }
-                
+
                 return new HtmlResponse($this->view->render());
             }
         }
