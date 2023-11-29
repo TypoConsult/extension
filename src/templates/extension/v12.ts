@@ -10,6 +10,7 @@ export default {
         {
             public const EXT_KEY = '{{extensionNameSnake}}';
         }
+        
     `,
     'Classes/Controller/PluginController.php': `
         <?php
@@ -21,19 +22,18 @@ export default {
         use TYPO3\\CMS\\Core\\Http\\HtmlResponse;
         use TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ActionController;
         use TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Repository\\ContentRepository;
-        use TYPOCONSULT\\TcSys\\Utility\\CommonUtility;
-        use TYPOCONSULT\\TcSys\\Utility\\PageResourceUtility;
-        use TYPOCONSULT\\TcSys\\Utility\\SassCompilerUtility;
         
         class PluginController extends ActionController
         {
             private array $cObjData = [];
             
-            public function __construct(protected ContentRepository $contentRepository) {}
+            public function __construct(protected ContentRepository $contentRepository) 
+            {
+            }
         
             public function initializeAction(): void
             {
-                $this->cObjData = $this->configurationManager->getContentObject()->data;
+                $this->cObjData = $this->request->getAttribute('currentContentObject')->data;
             }
         
             public function showAction(): HtmlResponse
@@ -42,57 +42,12 @@ export default {
         
                 if ($content) {
                     $this->view->assign('content', $content);
-        
-                    $this->renderStyles();
-                    $this->renderScript();
                 }
                 
                 return new HtmlResponse($this->view->render());
             }
-        
-            private function renderStyles(): void
-            {
-                $GLOBALS['TSFE']->pSetup['styles.']['variables.'] = array_merge(
-                    $GLOBALS['TSFE']->pSetup['styles.']['variables.'],
-                    [
-                        'className' => $this->settings['className']
-                    ]
-                );
-                
-                $styles = array_map(function ($path) {
-                    return SassCompilerUtility::process($path);
-                }, $this->settings['stylesPaths'] ?? []);
-        
-                PageResourceUtility::addStyleBlock(
-                    CommonUtility::getUniqueNumberFromString(get_class($this)),
-                    implode('', $styles),
-                    ['mode' => 'inline']
-                );
-            }
-        
-            private function renderScript(): void
-            {
-                $search = [
-                    '###tabletMinWidth###',
-                    '###tabletMaxWidth###'
-                ];
-    
-                $replace = [
-                    intval($this->settings['tabletMinWidth']),
-                    intval($this->settings['tabletMaxWidth'])
-                ];
-                
-                $script = array_map(function ($path) {
-                    return file_get_contents(CommonUtility::getPath($path));
-                }, $this->settings['javascriptPaths'] ?? []);
-        
-                PageResourceUtility::addScriptBlock(
-                    CommonUtility::getUniqueNumberFromString(get_class($this)),
-                    str_replace($search, $replace, implode('', $script)),
-                    ['mode' => 'inline']
-                );
-            }
         }
+        
     `,
     'Classes/Domain/Model/Content.php': `
         <?php
@@ -101,7 +56,10 @@ export default {
         
         namespace TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model;
         
-        class Content extends \\TYPOCONSULT\\TcSys\\Domain\\Model\\Content {}
+        class Content extends \\TYPOCONSULT\\TcSys\\Domain\\Model\\Content 
+        {
+        }
+        
     `,
     'Classes/Domain/Repository/ContentRepository.php': `
         <?php
@@ -166,6 +124,7 @@ export default {
                 return null;
             }
         }
+        
     `,
     'Classes/Hooks/VoilaHook.php': `
         <?php
@@ -203,6 +162,7 @@ export default {
                 return $preview;
             }
         }
+        
     `,
     'Configuration/Icons.php': `
         <?php
