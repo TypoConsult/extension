@@ -12,6 +12,7 @@ class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
     private readonly rootTemplateFolder: string;
     private template: StringObject = {};
+    private os = require('node:os');
 
     constructor(private readonly input: ExtensionInputInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
@@ -53,9 +54,10 @@ class ExtensionParser implements ParserInterface {
     }
 
     private getParsedContentFromTemplate(template: string): string {
+
         return replaceExtensionNamePlaceholders(template, this.extensionNameVariants)
-            .trimStart()
-            .replace(/^ {8}/gm, '');
+            .trim()
+            .replace(/^ {8}/gm, '') + this.os.EOL;
     }
 
     private async convertToZip() {

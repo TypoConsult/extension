@@ -9,8 +9,7 @@ export default {
         class GeneralConstants
         {
             public const EXT_KEY = '{{extensionNameSnake}}';
-        }
-    `,
+        }`,
     'Classes/Controller/PluginController.php': `
         <?php
 
@@ -26,7 +25,7 @@ export default {
         {
             private array $cObjData = [];
             
-            public function __construct(protected ContentRepository $contentRepository) 
+            public function __construct(protected ContentRepository $contentRepository)
             {
             }
         
@@ -54,7 +53,7 @@ export default {
         
         namespace TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model;
         
-        class Content extends \\TYPOCONSULT\\TcSys\\Domain\\Model\\Content 
+        class Content extends \\TYPOCONSULT\\TcSys\\Domain\\Model\\Content
         {
         }
     `,
