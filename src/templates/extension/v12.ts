@@ -10,7 +10,6 @@ export default {
         {
             public const EXT_KEY = '{{extensionNameSnake}}';
         }
-        
     `,
     'Classes/Controller/PluginController.php': `
         <?php
@@ -47,7 +46,6 @@ export default {
                 return new HtmlResponse($this->view->render());
             }
         }
-        
     `,
     'Classes/Domain/Model/Content.php': `
         <?php
@@ -59,7 +57,6 @@ export default {
         class Content extends \\TYPOCONSULT\\TcSys\\Domain\\Model\\Content 
         {
         }
-        
     `,
     'Classes/Domain/Repository/ContentRepository.php': `
         <?php
@@ -124,7 +121,6 @@ export default {
                 return null;
             }
         }
-        
     `,
     'Classes/Hooks/VoilaHook.php': `
         <?php
@@ -162,7 +158,6 @@ export default {
                 return $preview;
             }
         }
-        
     `,
     'Configuration/Icons.php': `
         <?php
