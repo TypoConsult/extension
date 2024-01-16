@@ -419,7 +419,7 @@ export default {
                 }
             },
             "require": {
-                "typo3/cms-core": "^12."
+                "typo3/cms-core": "^12.4"
             }
         }
     `,
