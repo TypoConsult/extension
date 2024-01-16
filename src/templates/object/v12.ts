@@ -140,11 +140,14 @@ const template: ObjectTemplate = {
             <?php
             
             declare(strict_types=1);
+            
+            use TYPOCONSULT\\{{extensionNamePascal}}\\Constants\\GeneralConstants;
+            use TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model\\{{objectNamePascal}};
 
             defined('TYPO3') or die('Access denied.');
             
-            $extKey = \\TYPOCONSULT\\{{extensionNamePascal}}\\Constants\\GeneralConstants::EXT_KEY;
-            $table = \\TYPOCONSULT\\{{extensionNamePascal}}\\Domain\\Model\\{{objectNamePascal}}::TABLE_NAME;
+            $extKey = GeneralConstants::EXT_KEY;
+            $table = {{objectNamePascal}}::TABLE_NAME;
             $labelPrefix = "LLL:EXT:$extKey/Resources/Private/Language/locallang_db.xlf:$table";
             
             return [
@@ -173,7 +176,8 @@ const template: ObjectTemplate = {
                             'type' => 'input',
                             'size' => 40,
                             'max' => 255,
-                            'eval' => 'required,trim'
+                            'eval' => 'trim',
+                            'required' => true
                         ]
                     ]
                 ]
