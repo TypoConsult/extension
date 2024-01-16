@@ -10,13 +10,11 @@ import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from '../u
 
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
-    private readonly rootTemplateFolder: string;
     private template: StringObject = {};
     private os = require('node:os');
 
     constructor(private readonly input: ExtensionInputInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
-        this.rootTemplateFolder = `templates/extension/v${this.input.version}`;
     }
 
     public async parse(): Promise<void> {
