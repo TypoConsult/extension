@@ -1,76 +1,117 @@
 #!/usr/bin/env node
-import chalk from 'chalk';
-import clear from 'clear';
-import inquirer from 'inquirer';
-import ExtensionParser from './parsers/extension.parser';
-import ObjectParser from './parsers/object.parser';
-import { ActionTypes, SharedInputInterface } from "./types/general.types";
-import { ObjectInputInterface } from './types/object.types';
-import { isEmpty, isLowercase, isSnakeCase } from './utils/validation.utils';
+import chalk from "chalk";
+import { ActionTypes } from "./types/general.types";
+import { logger } from "./utils/logger";
+import * as p from "@clack/prompts";
+import { setTimeout } from "node:timers/promises";
+import { isEmpty, isLowercase, isSnakeCase } from "./utils/validation.utils";
 
-clear();
+const main = async () => {
+    // Clear the current terminal session before starting
+    console.clear();
 
-console.log(chalk.hex('#FF8700').bold('TYPO3 Extension Utility CLI'));
+    // Print the CLI title
+    p.intro(chalk.hex("#FF8700").bold("TYPO3 Extension Utility CLI"));
 
-const parsers = {
-    [ActionTypes.EXTENSION]: ExtensionParser,
-    [ActionTypes.OBJECT]: ObjectParser
+    // Ask the questions
+    const project = await p.group(
+        {
+            action: () => p.select({
+                message: "What do you want to do?",
+                options: [
+                    { label: "Create extension", value: ActionTypes.EXTENSION },
+                    { label: "Add object", value: ActionTypes.OBJECT },
+                ],
+                initialValue: ActionTypes.EXTENSION,
+            }),
+            version: () => p.select({
+                message: "TYPO3 target version",
+                options: [
+                    { label: "v12", value: 12 },
+                ],
+                initialValue: 12,
+            }),
+            extensionKey: () => p.text({
+                message: "Enter extension key",
+                defaultValue: "tc_base",
+                placeholder: "tc_base",
+                validate(input: string): void | string {
+                    if (!input) {
+                        return;
+                    }
+
+                    if (!isLowercase(input)) {
+                        return "Extension key must include only lowercase letters";
+                    }
+
+                    if (!isSnakeCase(input)) {
+                        return "Extension key must be in snake_case format";
+                    }
+                },
+            }),
+            objectName: ({ results }) => {
+                if (results.action !== ActionTypes.OBJECT) {
+                    return;
+                }
+
+                return p.text({
+                    message: "Enter object name",
+                    validate(input: string): void | string {
+                        if (isEmpty(input)) return "Object name cannot be empty string";
+                        if (!isLowercase(input)) return "Object name must include only lowercase letters";
+                        if (!isSnakeCase(input)) return "Object name must be in snake_case format";
+                    },
+                });
+            },
+            linting: ({ results }) => {
+                if (results.action !== ActionTypes.EXTENSION) {
+                    return;
+                }
+
+                return p.confirm({
+                    message: "Use linting?",
+                    initialValue: true,
+                });
+            },
+            tests: ({ results }) => {
+                if (results.action !== ActionTypes.EXTENSION) {
+                    return;
+                }
+
+                return p.confirm({
+                    message: "Use tests?",
+                    initialValue: false,
+                });
+            },
+        },
+        {
+            onCancel() {
+                process.exit(1);
+            },
+        },
+    );
+
+    const s = p.spinner();
+    s.start("Loading...");
+    await setTimeout(2500);
+    s.stop("Finished");
+
+    if (project.action === ActionTypes.EXTENSION) {
+        const nextSteps = `cd ..\ncomposer require ${project.extensionKey}`;
+        p.note(nextSteps, "Next steps");
+    }
+
+    if (project.action === ActionTypes.OBJECT) {
+        const nextSteps = `git add . && git commit -m "Introduce ${project.objectName} object"`;
+        p.note(nextSteps, "Next steps");
+    }
+
+    p.outro(`Problems? ${chalk.underline(chalk.cyan("https://github.com/TypoConsult/extension/issues"))}`);
 };
 
-inquirer
-    .prompt(
-        [
-            {
-                name: 'action',
-                message: 'What do you want to do?',
-                type: 'list',
-                choices: [
-                    { name: 'Create extension', value: ActionTypes.EXTENSION },
-                    { name: 'Add object', value: ActionTypes.OBJECT }
-                ]
-            },
-            {
-                name: 'version',
-                message: 'TYPO3 target version',
-                type: 'list',
-                choices: [
-                    { name: 'v12', value: 12 },
-                ]
-            },
-            {
-                name: 'extensionKey',
-                message: 'Enter extension key (snake_case)',
-                type: 'input',
-                default: 'tc_base',
-                validate(input: string): boolean | string {
-                    if (!isLowercase(input)) return 'Extension key must include only lowercase letters';
-                    if (!isSnakeCase(input)) return 'Extension key must be in snake_case format';
-
-                    return true;
-                }
-            },
-            {
-                name: 'objectName',
-                message: 'Enter object name (snake_case)',
-                type: 'input',
-                when: ({ action }) => action === ActionTypes.OBJECT,
-                validate(input: string): boolean | string {
-                    if (isEmpty(input)) return 'Object name cannot be empty string';
-                    if (!isLowercase(input)) return 'Object name must include only lowercase letters';
-                    if (!isSnakeCase(input)) return 'Object name must be in snake_case format';
-
-                    return true;
-                }
-            }
-        ]
-    )
-    .then(async (input: SharedInputInterface | ObjectInputInterface) => {
-        const parser = new parsers[input.action](input as any);
-
-        await parser.parse();
-    })
-    .catch(error => {
-        console.log(chalk.bold.red('Something went wrong...'));
-        console.log(chalk.red(error));
-    });
+main().catch((err) => {
+    logger.error("An unknown error has occurred:");
+    console.log(err);
+    process.exit(1);
+});
 
