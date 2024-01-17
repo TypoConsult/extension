@@ -1,0 +1,17 @@
+plugin {
+    extensionNamePrefixed {
+        view {
+            templateRootPaths {
+                10 = {$plugin.extensionNamePrefixed.view.templateRootPath}
+            }
+
+            partialRootPaths {
+                10 = {$plugin.extensionNamePrefixed.view.partialRootPath}
+            }
+
+            layoutRootPaths {
+                10 = {$plugin.extensionNamePrefixed.view.layoutRootPath}
+            }
+        }
+    }
+}

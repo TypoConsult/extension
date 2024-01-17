@@ -1,0 +1,17 @@
+{
+    "name": "typoconsult/extensionNameKebab",
+    "type": "typo3-cms-extension",
+    "autoload": {
+        "psr-4": {
+            "TYPOCONSULT\\ExtensionNamePascal\\": "Classes"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "extensionNameSnake"
+        }
+    },
+    "require": {
+        "typo3/cms-core": "^12.4"
+    }
+}
