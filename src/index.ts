@@ -4,8 +4,7 @@ import clear from 'clear';
 import inquirer from 'inquirer';
 import ExtensionParser from './parsers/extension.parser';
 import ObjectParser from './parsers/object.parser';
-import { ExtensionInputInterface } from './types/extension.types';
-import { ActionTypes } from './types/general.types';
+import { ActionTypes, SharedInputInterface } from "./types/general.types";
 import { ObjectInputInterface } from './types/object.types';
 import { isEmpty, isLowercase, isSnakeCase } from './utils/validation.utils';
 
@@ -53,12 +52,6 @@ inquirer
                 }
             },
             {
-                name: 'zip',
-                message: 'Generate zipped extension?',
-                type: 'confirm',
-                when: ({ action, version }) => action === ActionTypes.EXTENSION && version < 11
-            },
-            {
                 name: 'objectName',
                 message: 'Enter object name (snake_case)',
                 type: 'input',
@@ -73,7 +66,7 @@ inquirer
             }
         ]
     )
-    .then(async (input: ExtensionInputInterface | ObjectInputInterface) => {
+    .then(async (input: SharedInputInterface | ObjectInputInterface) => {
         const parser = new parsers[input.action](input as any);
 
         await parser.parse();

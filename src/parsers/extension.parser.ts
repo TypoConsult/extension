@@ -1,19 +1,17 @@
-import archiver from 'archiver';
-import chalk from 'chalk';
-import { createWriteStream } from 'fs';
-import { mkdir, rm, writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
-import { ExtensionInputInterface, ExtensionNameVariants } from '../types/extension.types';
-import { StringObject } from '../types/general.types';
-import { ParserInterface } from '../types/parser.types';
-import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from '../utils/extension.utils';
+import chalk from "chalk";
+import { mkdir, writeFile } from "fs/promises";
+import { dirname, join } from "path";
+import { ExtensionNameVariants } from "../types/extension.types";
+import { SharedInputInterface, StringObject } from "../types/general.types";
+import { ParserInterface } from "../types/parser.types";
+import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from "../utils/extension.utils";
 
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
     private template: StringObject = {};
-    private os = require('node:os');
+    private os = require("node:os");
 
-    constructor(private readonly input: ExtensionInputInterface) {
+    constructor(private readonly input: SharedInputInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
     }
 
@@ -21,8 +19,6 @@ class ExtensionParser implements ParserInterface {
         await this.initializeTemplate();
         await this.createExtensionFolder();
         await this.createFilesFromTemplate();
-
-        if (this.input.zip) await this.convertToZip();
     }
 
     private async createExtensionFolder(): Promise<void> {
@@ -45,9 +41,9 @@ class ExtensionParser implements ParserInterface {
 
     private getDestinationFromTemplate(filePath: string): string {
         return join(
-            '.',
+            ".",
             this.getOutputFolderName(),
-            replaceExtensionNamePlaceholders(filePath, this.extensionNameVariants)
+            replaceExtensionNamePlaceholders(filePath, this.extensionNameVariants),
         );
     }
 
@@ -55,39 +51,7 @@ class ExtensionParser implements ParserInterface {
 
         return replaceExtensionNamePlaceholders(template, this.extensionNameVariants)
             .trim()
-            .replace(/^ {8}/gm, '') + this.os.EOL;
-    }
-
-    private async convertToZip() {
-        const outputZipFolderNameParts = [
-            this.getOutputFolderName(),
-            `${this.input.version}.0.0`,
-            ExtensionParser.getExtensionZipFileDateString()
-        ];
-
-        const output = createWriteStream(`${outputZipFolderNameParts.join('_')}.zip`);
-        const archive = archiver('zip', {
-            zlib: { level: 9 }
-        });
-
-        archive.pipe(output);
-        archive.directory(this.getOutputFolderName(), false);
-
-        await archive.finalize();
-
-        await rm(`./${this.getOutputFolderName()}`, { recursive: true });
-    }
-
-    private static getExtensionZipFileDateString(): string {
-        const now = new Date();
-
-        return [
-            now.getFullYear(),
-            ('0' + (now.getMonth() + 1)).slice(-2),
-            ('0' + now.getDate()).slice(-2),
-            ('0' + now.getHours()).slice(-2),
-            ('0' + now.getMinutes()).slice(-2)
-        ].join('');
+            .replace(/^ {8}/gm, "") + this.os.EOL;
     }
 
     private async initializeTemplate() {
