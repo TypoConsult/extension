@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-import chalk from "chalk";
 import { ActionTypes } from "./types/general.types";
 import { logger } from "./utils/logger";
 import * as p from "@clack/prompts";
 import { setTimeout } from "node:timers/promises";
 import { isEmpty, isLowercase, isSnakeCase } from "./utils/validation.utils";
+import pc from "picocolors";
 
 const main = async () => {
     // Clear the current terminal session before starting
     console.clear();
 
     // Print the CLI title
-    p.intro(chalk.hex("#FF8700").bold("TYPO3 Extension Utility CLI"));
+    p.intro(pc.bgCyan(pc.black(" TYPO3 Extension Utility CLI ")));
 
     // Ask the questions
     const project = await p.group(
@@ -36,7 +36,7 @@ const main = async () => {
                 defaultValue: "tc_base",
                 placeholder: "tc_base",
                 validate(input: string): void | string {
-                    if (!input) {
+                    if (isEmpty(input)) {
                         return;
                     }
 
@@ -49,6 +49,17 @@ const main = async () => {
                     }
                 },
             }),
+            targetFolder: ({ results }) => {
+                if (results.action !== ActionTypes.EXTENSION) {
+                    return;
+                }
+
+                return p.text({
+                    message: "Enter target folder",
+                    defaultValue: "packages",
+                    placeholder: "packages",
+                });
+            },
             objectName: ({ results }) => {
                 if (results.action !== ActionTypes.OBJECT) {
                     return;
@@ -57,9 +68,17 @@ const main = async () => {
                 return p.text({
                     message: "Enter object name",
                     validate(input: string): void | string {
-                        if (isEmpty(input)) return "Object name cannot be empty string";
-                        if (!isLowercase(input)) return "Object name must include only lowercase letters";
-                        if (!isSnakeCase(input)) return "Object name must be in snake_case format";
+                        if (isEmpty(input)) {
+                            return "Object name cannot be empty string";
+                        }
+
+                        if (!isLowercase(input)) {
+                            return "Object name must include only lowercase letters";
+                        }
+
+                        if (!isSnakeCase(input)) {
+                            return "Object name must be in snake_case format";
+                        }
                     },
                 });
             },
@@ -97,7 +116,7 @@ const main = async () => {
     s.stop("Finished");
 
     if (project.action === ActionTypes.EXTENSION) {
-        const nextSteps = `cd ..\ncomposer require ${project.extensionKey}`;
+        const nextSteps = `composer require ${project.extensionKey} @dev`;
         p.note(nextSteps, "Next steps");
     }
 
@@ -106,7 +125,7 @@ const main = async () => {
         p.note(nextSteps, "Next steps");
     }
 
-    p.outro(`Problems? ${chalk.underline(chalk.cyan("https://github.com/TypoConsult/extension/issues"))}`);
+    p.outro(`Problems? ${pc.underline(pc.cyan("https://github.com/TypoConsult/extension/issues"))}`);
 };
 
 main().catch((err) => {

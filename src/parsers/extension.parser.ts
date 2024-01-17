@@ -1,10 +1,10 @@
-import chalk from "chalk";
 import { mkdir, writeFile } from "fs/promises";
 import { dirname, join } from "path";
 import { ExtensionNameVariants } from "../types/extension.types";
 import { SharedInputInterface, StringObject } from "../types/general.types";
 import { ParserInterface } from "../types/parser.types";
 import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from "../utils/extension.utils";
+import pc from "picocolors";
 
 class ExtensionParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
@@ -25,7 +25,7 @@ class ExtensionParser implements ParserInterface {
         try {
             await mkdir(`./${this.getOutputFolderName()}`);
         } catch (e) {
-            console.log(chalk.red(`"${this.getOutputFolderName()}" already exists in this location`));
+            console.log(pc.red(`"${this.getOutputFolderName()}" already exists in this location`));
         }
     }
 

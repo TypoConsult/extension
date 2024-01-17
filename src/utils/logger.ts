@@ -1,16 +1,16 @@
-import chalk from "chalk";
+import pc from "picocolors";
 
 export const logger = {
-    error(...args: unknown[]) {
-        console.log(chalk.red(...args));
+    error(...args: (string | number)[]) {
+        console.log(...args.map(arg => pc.red(arg)));
     },
-    warn(...args: unknown[]) {
-        console.log(chalk.yellow(...args));
+    warn(...args: (string | number)[]) {
+        console.log(...args.map(arg => pc.yellow(arg)));
     },
-    info(...args: unknown[]) {
-        console.log(chalk.cyan(...args));
+    info(...args: (string | number)[]) {
+        console.log(...args.map(arg => pc.cyan(arg)));
     },
-    success(...args: unknown[]) {
-        console.log(chalk.green(...args));
+    success(...args: (string | number)[]) {
+        console.log(...args.map(arg => pc.green(arg)));
     },
 };

@@ -1,12 +1,12 @@
-import chalk from 'chalk';
-import { dirname, join } from 'path';
-import { ExtensionNameVariants } from '../types/extension.types';
-import { ObjectInputInterface, ObjectNameVariants, ObjectTemplate } from '../types/object.types';
-import { ParserInterface } from '../types/parser.types';
-import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from '../utils/extension.utils';
-import { generateRandomHexColor } from '../utils/general.utils';
-import { getObjectNameVariants, replaceObjectNamePlaceholders } from '../utils/object.utils';
-import { access, mkdir, readFile, writeFile } from 'fs/promises';
+import { dirname, join } from "path";
+import { ExtensionNameVariants } from "../types/extension.types";
+import { ObjectInputInterface, ObjectNameVariants, ObjectTemplate } from "../types/object.types";
+import { ParserInterface } from "../types/parser.types";
+import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from "../utils/extension.utils";
+import { generateRandomHexColor } from "../utils/general.utils";
+import { getObjectNameVariants, replaceObjectNamePlaceholders } from "../utils/object.utils";
+import { access, mkdir, readFile, writeFile } from "fs/promises";
+import { logger } from "../utils/logger";
 
 class ObjectParser implements ParserInterface {
     private readonly extensionNameVariants: ExtensionNameVariants;
@@ -38,26 +38,26 @@ class ObjectParser implements ParserInterface {
         try {
             await access(`./${extensionKey}`);
         } catch (e) {
-            console.log(chalk.red.bold(`Could not find target extension '${extensionKey}' in this location`));
+            logger.error(`Could not find target extension '${extensionKey}' in this location`);
             process.exit();
         }
     }
 
     private async validateTargetObject() {
         if (!this.template?.create) {
-            console.log(chalk.red.bold('Template does not contain files to create'));
+            logger.error("Template does not contain files to create");
             process.exit();
         }
 
         const fileState = await Promise.all(
             Object.keys(this.template.create)
-                  .map(filePath => access(this.getExtensionFilePath(filePath))
-                      .then(() => true)
-                      .catch(() => false))
+                .map(filePath => access(this.getExtensionFilePath(filePath))
+                    .then(() => true)
+                    .catch(() => false)),
         );
 
         if (!fileState.every(element => !element)) {
-            console.log(chalk.red.bold(`Target object '${this.objectNameVariants.pascal}' already seem to exist in this extension.`));
+            logger.error(`Target object '${this.objectNameVariants.pascal}' already seem to exist in this extension.`);
             process.exit();
         }
     }
@@ -72,7 +72,7 @@ class ObjectParser implements ParserInterface {
             await mkdir(dirname(destination), { recursive: true });
             await writeFile(destination, replacedContents);
 
-            console.log(chalk.green(`Created file '${destination}'`));
+            logger.success(`Created file '${destination}'`);
         }
     }
 
@@ -89,7 +89,7 @@ class ObjectParser implements ParserInterface {
             try {
                 await access(destination);
             } catch (e) {
-                console.log(chalk.red.bold(`Could not find file '${destination}' - skipped`));
+                logger.warn(`Could not find file '${destination}' - skipped`);
                 continue;
             }
 
@@ -99,13 +99,13 @@ class ObjectParser implements ParserInterface {
                 insertAtEndOfFile,
                 insertBefore,
                 prependString,
-                spacesToRemove
+                spacesToRemove,
             } = this.template.append[filePath];
             const buffer = await readFile(destination);
             let content = buffer.toString();
 
             if (insertAtEndOfFile) {
-                if (content !== '') content += '\n\n';
+                if (content !== "") content += "\n\n";
 
                 content += this.getParsedContentFromTemplate(templateContent, spacesToRemove);
             }
@@ -114,44 +114,44 @@ class ObjectParser implements ParserInterface {
                 const targetIndex = content.indexOf(insertBefore);
 
                 if (targetIndex === -1) {
-                    console.log(chalk.red.bold(`Configured insert position '${insertBefore}' was not found`));
+                    logger.error(`Configured insert position '${insertBefore}' was not found`);
                     process.exit();
                 }
 
                 content = content.slice(0, targetIndex)
-                    + (prependString ?? '')
+                    + (prependString ?? "")
                     + this.getParsedContentFromTemplate(templateContent, spacesToRemove)
-                    + (appendString ?? '')
+                    + (appendString ?? "")
                     + content.slice(targetIndex);
             }
 
             await writeFile(destination, content);
 
-            console.log(chalk.yellow(`Updated file '${destination}'`));
+            logger.info(`Updated file '${destination}'`);
         }
     }
 
     private getExtensionFilePath(filePath: string): string {
         return join(
-            '.',
+            ".",
             this.getExtensionFolderName(),
             replaceObjectNamePlaceholders(
                 replaceExtensionNamePlaceholders(filePath, this.extensionNameVariants),
-                this.objectNameVariants
-            )
+                this.objectNameVariants,
+            ),
         );
     }
 
     private getParsedContentFromTemplate(template: string, spacesToRemove: number = 12): string {
-        const spaceRegex = new RegExp(`^ {${spacesToRemove}}`, 'gm');
+        const spaceRegex = new RegExp(`^ {${spacesToRemove}}`, "gm");
 
         return replaceObjectNamePlaceholders(
             replaceExtensionNamePlaceholders(template, this.extensionNameVariants),
-            this.objectNameVariants
+            this.objectNameVariants,
         )
-            .replaceAll('{{randomHexColor}}', generateRandomHexColor())
+            .replaceAll("{{randomHexColor}}", generateRandomHexColor())
             .trim()
-            .replace(spaceRegex, '');
+            .replace(spaceRegex, "");
     }
 
     private getExtensionFolderName() {
