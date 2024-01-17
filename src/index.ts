@@ -35,8 +35,6 @@ inquirer
                 type: 'list',
                 choices: [
                     { name: 'v12', value: 12 },
-                    { name: 'v11', value: 11 },
-                    { name: 'v10', value: 10 }
                 ]
             },
             {

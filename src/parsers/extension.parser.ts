@@ -48,7 +48,6 @@ class ExtensionParser implements ParserInterface {
     }
 
     private getParsedContentFromTemplate(template: string): string {
-
         return replaceExtensionNamePlaceholders(template, this.extensionNameVariants)
             .trim()
             .replace(/^ {8}/gm, "") + this.os.EOL;

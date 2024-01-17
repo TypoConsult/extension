@@ -6,7 +6,7 @@ export enum ActionTypes {
 export interface SharedInputInterface {
     action: ActionTypes;
     extensionKey: string;
-    version: 10;
+    version: number;
 }
 
 export type StringObject = { [key: string]: string }
