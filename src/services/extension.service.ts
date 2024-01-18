@@ -19,6 +19,8 @@ class ExtensionService {
         await this.createExtensionFolder();
         await this.copyTemplateFilesToNewFolder();
         await this.handleReplacements();
+        await this.handleLintingSetup();
+        await this.handleTestSetup();
 
         return { path: this.folderPath, composerName: this.nameVariants.kebab };
     }
@@ -49,6 +51,73 @@ class ExtensionService {
         }
 
         await mkdir(this.folderPath, { recursive: true });
+    }
+
+    private async handleLintingSetup() {
+        // Exit if linting is not chosen
+        if (!this.input.linting) {
+            return;
+        }
+
+        const { path, content } = await this.getComposer();
+
+        // Add dependencies
+        content["require-dev"]["phpstan/phpstan"] = "^1.10";
+        content["require-dev"]["squizlabs/php_codesniffer"] = "^3.7";
+
+        // Add scripts
+        content["scripts"]["lint:check:stan"] = "phpstan analyse -l 5 Classes";
+        content["scripts"]["lint:check:cs"] = "phpcs --standard=PSR12 Classes";
+        content["scripts"]["lint:check"] = ["@lint:check:stan", "@lint:check:cs"];
+        content["scripts"]["lint:fix:cs"] = "phpcbf --standard=PSR12 Classes";
+        content["scripts"]["lint:fix"] = ["@lint:fix:cs"];
+
+        await writeFile(path, JSON.stringify(content, null, 4));
+    }
+
+    private async handleTestSetup() {
+        // Exit if tests is not chosen
+        if (!this.input.tests) {
+            return;
+        }
+
+        // Create tests folder
+        await mkdir(join(this.folderPath, "tests"));
+        await writeFile(join(this.folderPath, "tests", ".gitkeep"), "");
+
+        // Update composer.json
+        const { path, content } = await this.getComposer();
+
+        // Add dependencies
+        content["require-dev"]["phpunit/phpunit"] = "^10";
+
+        // Add script
+        content["scripts"]["tests"] = "phpunit tests --testdox";
+
+        // Adjust linting scripts
+        if (this.input.linting) {
+            content["scripts"]["lint:check:stan"] += " tests";
+            content["scripts"]["lint:check:cs"] += " tests";
+            content["scripts"]["lint:fix:cs"] += " tests";
+        }
+
+        await writeFile(path, JSON.stringify(content, null, 4));
+    }
+
+    private async getComposer() {
+        const composerPath = join(this.folderPath, "composer.json");
+        const composerContent = await readFile(composerPath, { encoding: "utf8" });
+        const composer = JSON.parse(composerContent);
+
+        if (!("require-dev" in composer)) {
+            composer["require-dev"] = {};
+        }
+
+        if (!("scripts" in composer)) {
+            composer["scripts"] = {};
+        }
+
+        return { path: composerPath, content: composer };
     }
 }
 
