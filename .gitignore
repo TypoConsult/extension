@@ -4,6 +4,7 @@ node_modules
 # Build
 bin
 tc_*
+packages
 
 # Misc
 .idea

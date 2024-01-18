@@ -17,6 +17,9 @@
         "bin",
         "templates"
     ],
+    "engines": {
+        "node": "^18 || ^16"
+    },
     "license": "ISC",
     "dependencies": {
         "@clack/core": "^0.3.3",

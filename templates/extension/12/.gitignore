@@ -1,0 +1,21 @@
+# Misc
+.DS_Store
+.idea
+nbproject
+
+# Environment
+.env
+credentials.txt
+
+# Composer
+composer.lock
+
+# TYPO3
+/var/*
+!/var/labels
+/vendor
+/public/*
+!/public/.htaccess
+!/public/typo3conf
+/public/typo3conf/*
+!/public/typo3conf/AdditionalConfiguration.php

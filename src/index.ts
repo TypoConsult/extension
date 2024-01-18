@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-import { ActionTypes } from "./types/general.types";
+import { ActionTypes, PrompsAnswersInterface } from "./types/general.types";
 import { logger } from "./utils/logger";
 import * as p from "@clack/prompts";
 import { setTimeout } from "node:timers/promises";
 import { isEmpty, isLowercase, isSnakeCase } from "./utils/validation.utils";
 import pc from "picocolors";
+import ExtensionService from "./services/extension.service";
 
 const main = async () => {
     // Clear the current terminal session before starting
@@ -24,7 +25,7 @@ const main = async () => {
                 ],
                 initialValue: ActionTypes.EXTENSION,
             }),
-            version: () => p.select({
+            version: () => p.select<{ label: string; value: 12 }[], 12>({
                 message: "TYPO3 target version",
                 options: [
                     { label: "v12", value: 12 },
@@ -102,6 +103,7 @@ const main = async () => {
                     initialValue: false,
                 });
             },
+            // TODO: Install dependencies (composer update)
         },
         {
             onCancel() {
@@ -112,7 +114,15 @@ const main = async () => {
 
     const s = p.spinner();
     s.start("Loading...");
-    await setTimeout(2500);
+
+    // Always wait 2 seconds for the effect
+    await setTimeout(2000);
+
+    if (project.action === ActionTypes.EXTENSION) {
+        const extensionService = new ExtensionService(project as PrompsAnswersInterface);
+        await extensionService.createExtension();
+    }
+
     s.stop("Finished");
 
     if (project.action === ActionTypes.EXTENSION) {

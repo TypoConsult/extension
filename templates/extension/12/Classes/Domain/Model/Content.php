@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TYPOCONSULT\ExtensionNamePascal\Domain\Model;
+namespace TYPOCONSULT\extensionNamePascal\Domain\Model;
 
 class Content extends \TYPOCONSULT\TcSys\Domain\Model\Content
 {

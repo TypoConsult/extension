@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace TYPOCONSULT\ExtensionNamePascal\Domain\Repository;
+namespace TYPOCONSULT\extensionNamePascal\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPOCONSULT\ExtensionNamePascal\Domain\Model\Content;
+use TYPOCONSULT\extensionNamePascal\Domain\Model\Content;
 
 class ContentRepository extends Repository
 {

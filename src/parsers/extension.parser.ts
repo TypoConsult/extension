@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "fs/promises";
 import { dirname, join } from "path";
 import { ExtensionNameVariants } from "../types/extension.types";
-import { SharedInputInterface, StringObject } from "../types/general.types";
+import { PrompsAnswersInterface, StringObject } from "../types/general.types";
 import { ParserInterface } from "../types/parser.types";
 import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from "../utils/extension.utils";
 import pc from "picocolors";
@@ -11,7 +11,7 @@ class ExtensionParser implements ParserInterface {
     private template: StringObject = {};
     private os = require("node:os");
 
-    constructor(private readonly input: SharedInputInterface) {
+    constructor(private readonly input: PrompsAnswersInterface) {
         this.extensionNameVariants = getExtensionNameVariants(input.extensionKey);
     }
 

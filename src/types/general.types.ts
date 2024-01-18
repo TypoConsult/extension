@@ -3,10 +3,14 @@ export enum ActionTypes {
     OBJECT
 }
 
-export interface SharedInputInterface {
+export interface PrompsAnswersInterface {
     action: ActionTypes;
+    version: 12;
     extensionKey: string;
-    version: number;
+    targetFolder: string;
+    objectName?: string;
+    linting?: boolean;
+    tests?: boolean;
 }
 
 export type StringObject = { [key: string]: string }

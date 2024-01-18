@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace TYPOCONSULT\ExtensionNamePascal\Controller;
+namespace TYPOCONSULT\extensionNamePascal\Controller;
 
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPOCONSULT\ExtensionNamePascal\Domain\Repository\ContentRepository;
+use TYPOCONSULT\extensionNamePascal\Domain\Repository\ContentRepository;
 
 class PluginController extends ActionController
 {

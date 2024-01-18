@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use TYPOCONSULT\ExtensionNamePascal\Domain\Model\Content;
+use TYPOCONSULT\extensionNamePascal\Domain\Model\Content;
 
 return [
     Content::class => [

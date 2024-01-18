@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace TYPOCONSULT\ExtensionNamePascal\Hooks;
+namespace TYPOCONSULT\extensionNamePascal\Hooks;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPOCONSULT\ExtensionNamePascal\Domain\Model\Content;
-use TYPOCONSULT\ExtensionNamePascal\Domain\Repository\ContentRepository;
+use TYPOCONSULT\extensionNamePascal\Domain\Model\Content;
+use TYPOCONSULT\extensionNamePascal\Domain\Repository\ContentRepository;
 use TYPOCONSULT\TcSys\Utility\VoilaUtility;
 
 class VoilaHook

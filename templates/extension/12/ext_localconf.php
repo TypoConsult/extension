@@ -2,9 +2,9 @@
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
-use TYPOCONSULT\ExtensionNamePascal\Constants\GeneralConstants;
-use TYPOCONSULT\ExtensionNamePascal\Controller\PluginController;
-use TYPOCONSULT\ExtensionNamePascal\Hooks\VoilaHook;
+use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
+use TYPOCONSULT\extensionNamePascal\Controller\PluginController;
+use TYPOCONSULT\extensionNamePascal\Hooks\VoilaHook;
 
 defined('TYPO3') or die('Access denied.');
 
@@ -13,7 +13,7 @@ defined('TYPO3') or die('Access denied.');
     $labelPrefix = "LLL:EXT:$extKey/Resources/Private/Language/locallang_db.xlf:";
 
     ExtensionUtility::configurePlugin(
-        'ExtensionNamePascal',
+        'extensionNamePascal',
         'Plugin',
         [PluginController::class => 'show'],
         [],

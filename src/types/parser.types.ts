@@ -1,5 +1,5 @@
-import { SharedInputInterface } from "./general.types";
+import { PrompsAnswersInterface } from "./general.types";
 
 export interface ParserInterface {
-    parse: (input: SharedInputInterface) => Promise<void>
+    parse: (input: PrompsAnswersInterface) => Promise<void>
 }

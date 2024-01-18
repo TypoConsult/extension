@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TYPOCONSULT\ExtensionNamePascal\Constants;
+namespace TYPOCONSULT\extensionNamePascal\Constants;
 
 class GeneralConstants
 {
