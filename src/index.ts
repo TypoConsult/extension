@@ -128,15 +128,23 @@ const main = async () => {
     // Always wait a little for the effect
     await setTimeout(1000);
 
+    let reqName = "";
+
     // Execute logic for extension action
     if (project.action === ActionTypes.EXTENSION) {
         const extensionService = new ExtensionService(project as PrompsAnswersInterface);
-        const path = await extensionService.createExtension();
+        const { path, composerName } = await extensionService.createExtension();
+
+        reqName = composerName;
 
         if (project.installDependencies) {
             execSync(`composer update --working-dir ${path}`, { stdio: "ignore" });
         }
     }
+
+    // Execute logic for object action
+    if (project.action === ActionTypes.OBJECT) {
+
     }
 
     // Stop the spinner
@@ -144,7 +152,7 @@ const main = async () => {
 
     // Show extension next steps
     if (project.action === ActionTypes.EXTENSION) {
-        const nextSteps = `composer require ${project.extensionKey} @dev`;
+        const nextSteps = `composer require typoconsult/${reqName} @dev`;
         p.note(nextSteps, "Next steps");
     }
 
