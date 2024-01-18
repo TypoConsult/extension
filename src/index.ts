@@ -6,6 +6,7 @@ import { setTimeout } from "node:timers/promises";
 import { isEmpty, isLowercase, isSnakeCase } from "./utils/validation.utils";
 import pc from "picocolors";
 import ExtensionService from "./services/extension.service";
+import { execSync } from "child_process";
 
 const main = async () => {
     // Clear the current terminal session before starting
@@ -103,7 +104,16 @@ const main = async () => {
                     initialValue: false,
                 });
             },
-            // TODO: Install dependencies (composer update)
+            installDependencies: ({ results }) => {
+                if (results.action !== ActionTypes.EXTENSION) {
+                    return;
+                }
+
+                return p.confirm({
+                    message: "Install dependencies?",
+                    initialValue: true,
+                });
+            },
         },
         {
             onCancel() {
@@ -115,26 +125,36 @@ const main = async () => {
     const s = p.spinner();
     s.start("Loading...");
 
-    // Always wait 2 seconds for the effect
-    await setTimeout(2000);
+    // Always wait a little for the effect
+    await setTimeout(1000);
 
+    // Execute logic for extension action
     if (project.action === ActionTypes.EXTENSION) {
         const extensionService = new ExtensionService(project as PrompsAnswersInterface);
-        await extensionService.createExtension();
+        const path = await extensionService.createExtension();
+
+        if (project.installDependencies) {
+            execSync(`composer update --working-dir ${path}`, { stdio: "ignore" });
+        }
+    }
     }
 
+    // Stop the spinner
     s.stop("Finished");
 
+    // Show extension next steps
     if (project.action === ActionTypes.EXTENSION) {
         const nextSteps = `composer require ${project.extensionKey} @dev`;
         p.note(nextSteps, "Next steps");
     }
 
+    // Show object next steps
     if (project.action === ActionTypes.OBJECT) {
         const nextSteps = `git add . && git commit -m "Introduce ${project.objectName} object"`;
         p.note(nextSteps, "Next steps");
     }
 
+    // Show outro with link to GitHub issues page
     p.outro(`Problems? ${pc.underline(pc.cyan("https://github.com/TypoConsult/extension/issues"))}`);
 };
 

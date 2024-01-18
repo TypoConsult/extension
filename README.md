@@ -3,7 +3,8 @@
 A CLI tool for quickly generating various boilerplate code for TYPO3 extensions.
 
 ## Requirements
-[Node.js](https://nodejs.org/en/) v20 or higher
+- [Node.js](https://nodejs.org/en/) v20 or higher
+- [Composer](https://getcomposer.org/download/) v2 or above
 
 ## Usage
 Run the command `npx @typoconsult/extension@latest` in a terminal and the tool will guide you through.

@@ -15,10 +15,12 @@ class ExtensionService {
         this.folderPath = join(this.input.targetFolder, this.nameVariants.snake);
     }
 
-    public async createExtension(): Promise<void> {
+    public async createExtension(): Promise<string> {
         await this.createExtensionFolder();
         await this.copyTemplateFilesToNewFolder();
         await this.handleReplacements();
+
+        return this.folderPath;
     }
 
     private async handleReplacements() {
