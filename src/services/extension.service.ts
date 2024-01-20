@@ -63,7 +63,7 @@ class ExtensionService {
 
         // Add dependencies
         content["require-dev"]["phpstan/phpstan"] = "^1.10";
-        content["require-dev"]["squizlabs/php_codesniffer"] = "^3.7";
+        content["require-dev"]["squizlabs/php_codesniffer"] = "^3.8";
 
         // Add scripts
         content["scripts"]["lint:check:stan"] = "phpstan analyse -l 5 Classes";

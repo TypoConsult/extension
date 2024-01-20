@@ -7,6 +7,7 @@ import { isEmpty, isLowercase, isSnakeCase } from "./utils/validation.utils";
 import pc from "picocolors";
 import ExtensionService from "./services/extension.service";
 import { execSync } from "child_process";
+import ObjectService from "./services/object.service";
 
 const main = async () => {
     // Clear the current terminal session before starting
@@ -21,10 +22,10 @@ const main = async () => {
             action: () => p.select({
                 message: "What do you want to do?",
                 options: [
-                    { label: "Create extension", value: ActionTypes.EXTENSION },
-                    { label: "Add object", value: ActionTypes.OBJECT },
+                    { label: "Create extension", value: ActionTypes.CREATE_EXTENSION },
+                    { label: "Add object", value: ActionTypes.CREATE_OBJECT },
                 ],
-                initialValue: ActionTypes.EXTENSION,
+                initialValue: ActionTypes.CREATE_EXTENSION,
             }),
             version: () => p.select<{ label: string; value: 12 }[], 12>({
                 message: "TYPO3 target version",
@@ -51,19 +52,13 @@ const main = async () => {
                     }
                 },
             }),
-            targetFolder: ({ results }) => {
-                if (results.action !== ActionTypes.EXTENSION) {
-                    return;
-                }
-
-                return p.text({
-                    message: "Enter target folder",
-                    defaultValue: "packages",
-                    placeholder: "packages",
-                });
-            },
+            targetFolder: () => p.text({
+                message: ActionTypes.CREATE_EXTENSION ? "Where do you want to create the extension?" : "Where is the extension located?",
+                defaultValue: "packages",
+                placeholder: "packages",
+            }),
             objectName: ({ results }) => {
-                if (results.action !== ActionTypes.OBJECT) {
+                if (results.action !== ActionTypes.CREATE_OBJECT) {
                     return;
                 }
 
@@ -85,7 +80,7 @@ const main = async () => {
                 });
             },
             linting: ({ results }) => {
-                if (results.action !== ActionTypes.EXTENSION) {
+                if (results.action !== ActionTypes.CREATE_EXTENSION) {
                     return;
                 }
 
@@ -95,7 +90,7 @@ const main = async () => {
                 });
             },
             tests: ({ results }) => {
-                if (results.action !== ActionTypes.EXTENSION) {
+                if (results.action !== ActionTypes.CREATE_EXTENSION) {
                     return;
                 }
 
@@ -105,7 +100,7 @@ const main = async () => {
                 });
             },
             installDependencies: ({ results }) => {
-                if (results.action !== ActionTypes.EXTENSION) {
+                if (results.action !== ActionTypes.CREATE_EXTENSION) {
                     return;
                 }
 
@@ -128,37 +123,42 @@ const main = async () => {
     // Always wait a little for the effect
     await setTimeout(1000);
 
-    let reqName = "";
+    let composerRequireName = "";
 
     // Execute logic for extension action
-    if (project.action === ActionTypes.EXTENSION) {
+    if (project.action === ActionTypes.CREATE_EXTENSION) {
         const extensionService = new ExtensionService(project as PrompsAnswersInterface);
         const { path, composerName } = await extensionService.createExtension();
 
-        reqName = composerName;
+        composerRequireName = composerName;
 
         if (project.installDependencies) {
             execSync(`composer update --working-dir ${path}`, { stdio: "ignore" });
         }
     }
 
-    // Execute logic for object action
-    if (project.action === ActionTypes.OBJECT) {
+    let objectCommitName = "";
 
+    // Execute logic for object action
+    if (project.action === ActionTypes.CREATE_OBJECT) {
+        const objectService = new ObjectService(project as PrompsAnswersInterface);
+        const { pascalName } = await objectService.createObject();
+
+        objectCommitName = pascalName;
     }
 
     // Stop the spinner
     s.stop("Finished");
 
     // Show extension next steps
-    if (project.action === ActionTypes.EXTENSION) {
-        const nextSteps = `composer require typoconsult/${reqName} @dev`;
+    if (project.action === ActionTypes.CREATE_EXTENSION) {
+        const nextSteps = `composer require typoconsult/${composerRequireName} @dev`;
         p.note(nextSteps, "Next steps");
     }
 
     // Show object next steps
-    if (project.action === ActionTypes.OBJECT) {
-        const nextSteps = `git add . && git commit -m "Introduce ${project.objectName} object"`;
+    if (project.action === ActionTypes.CREATE_OBJECT) {
+        const nextSteps = `git add . && git commit -m "Introduce ${objectCommitName} object"`;
         p.note(nextSteps, "Next steps");
     }
 

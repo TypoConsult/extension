@@ -5,6 +5,7 @@ defined('TYPO3') or die('Access denied.');
 $extKey = \TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants::EXT_KEY;
 $table = \TYPOCONSULT\TcSys\Domain\Model\Content::TABLE_NAME;
 $labelPrefix = "LLL:EXT:$extKey/Resources/Private/Language/locallang_db.xlf:$table";
+// TODO: LabelUtility
 
 $pluginName = 'extensionNameClean_plugin';
 $pluginIcon = "extensions-$pluginName";

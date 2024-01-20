@@ -14,7 +14,7 @@ export const getObjectNameVariants = (objectName: string, extensionKey: string):
 
 export const replaceObjectNamePlaceholders = (input: string, objectNameVariants: ObjectNameVariants): string => {
     return input
-        .replaceAll('{{objectNamePascal}}', objectNameVariants.pascal)
-        .replaceAll('{{objectNameSnake}}', objectNameVariants.snake)
-        .replaceAll('{{objectTableName}}', objectNameVariants.table);
+        .replaceAll('objectNamePascal', objectNameVariants.pascal)
+        .replaceAll('objectNameSnake', objectNameVariants.snake)
+        .replaceAll('objectTableName', objectNameVariants.table);
 };

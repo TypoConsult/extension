@@ -1,6 +1,6 @@
 export enum ActionTypes {
-    EXTENSION,
-    OBJECT
+    CREATE_EXTENSION,
+    CREATE_OBJECT
 }
 
 export interface PrompsAnswersInterface {
