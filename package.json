@@ -1,6 +1,6 @@
 {
     "name": "@typoconsult/extension",
-    "version": "1.5.3",
+    "version": "2.0.0",
     "description": "A CLI tool for helping with all the boring extension setup stuff when working with a TYPO3 project.",
     "main": "bin/src/index.js",
     "bin": "bin/src/index.js",
