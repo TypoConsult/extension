@@ -1,0 +1,38 @@
+{
+    "name": "typoconsult/extensionNameKebab",
+    "type": "typo3-cms-extension",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "TYPOCONSULT\\extensionNamePascal\\": "Classes"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "extensionNameSnake"
+        }
+    },
+    "config": {
+        "sort-packages": false,
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.com/typoconsult/"
+        },
+        {
+            "packagist.org": false
+        }
+    ],
+    "require": {
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-extbase": "^12.4",
+        "typoconsult/tc-frontend": "^2.6",
+        "typoconsult/tc-tools": "^2.5",
+        "typoconsult/telemetry-typo3": "^1.1"
+    }
+}

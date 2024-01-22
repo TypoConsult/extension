@@ -1,6 +1,6 @@
-import { SharedInputInterface, StringObject } from './general.types';
+import { PrompsAnswersInterface, StringObject } from './general.types';
 
-export interface ObjectInputInterface extends SharedInputInterface {
+export interface ObjectInputInterface extends PrompsAnswersInterface {
     objectName: string;
 }
 

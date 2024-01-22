@@ -10,12 +10,12 @@ export const getExtensionNameVariants = (extensionKey: string): ExtensionNameVar
     snake: extensionKey
 });
 
-export const replaceExtensionNamePlaceholders = (input: string, extensionNameVariants: ExtensionNameVariants): string => {
+export const replaceExtensionNamePlaceholders = (input: string, nameVariants: ExtensionNameVariants): string => {
     return input
-        .replaceAll('{{extensionNameClean}}', extensionNameVariants.clean)
-        .replaceAll('{{extensionNameKebab}}', extensionNameVariants.kebab)
-        .replaceAll('{{extensionNamePascal}}', extensionNameVariants.pascal)
-        .replaceAll('{{extensionNamePrefixed}}', extensionNameVariants.prefixed)
-        .replaceAll('{{extensionNamePretty}}', extensionNameVariants.pretty)
-        .replaceAll('{{extensionNameSnake}}', extensionNameVariants.snake);
+        .replaceAll('extensionNameClean', nameVariants.clean)
+        .replaceAll('extensionNameKebab', nameVariants.kebab)
+        .replaceAll('extensionNamePascal', nameVariants.pascal)
+        .replaceAll('extensionNamePrefixed', nameVariants.prefixed)
+        .replaceAll('extensionNamePretty', nameVariants.pretty)
+        .replaceAll('extensionNameSnake', nameVariants.snake);
 };
