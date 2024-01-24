@@ -86,7 +86,7 @@ const main = async () => {
 
                 return p.confirm({
                     message: "Use linting?",
-                    initialValue: true,
+                    initialValue: false,
                 });
             },
             tests: ({ results }) => {
@@ -106,7 +106,7 @@ const main = async () => {
 
                 return p.confirm({
                     message: "Install dependencies?",
-                    initialValue: true,
+                    initialValue: false,
                 });
             },
         },
