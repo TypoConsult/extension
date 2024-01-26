@@ -12,7 +12,7 @@ class ExtensionService {
 
     constructor(private input: PrompsAnswersInterface) {
         this.nameVariants = getExtensionNameVariants(input.extensionKey);
-        console.log(process.cwd());
+        console.log(process.cwd(), process.env.PWD);
         this.folderPath = join(process.cwd(), this.input.targetFolder, this.nameVariants.snake);
     }
 
