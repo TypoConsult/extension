@@ -5,12 +5,13 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
 use TYPOCONSULT\extensionNamePascal\Controller\PluginController;
 use TYPOCONSULT\extensionNamePascal\Hooks\VoilaHook;
+use TYPOCONSULT\TcTools\Utilities\LabelUtility;
 
 defined('TYPO3') or die('Access denied.');
 
 (function () {
     $extKey = GeneralConstants::EXT_KEY;
-    $labelPrefix = "LLL:EXT:$extKey/Resources/Private/Language/locallang_db.xlf:";
+    $labelPrefix = LabelUtility::getPath(identifier: 'db', extKey: $extKey);
 
     ExtensionUtility::configurePlugin(
         'extensionNamePascal',
