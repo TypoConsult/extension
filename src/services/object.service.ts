@@ -25,7 +25,7 @@ class ObjectService {
 
         this.nameVariants = getObjectNameVariants(input.objectName, input.extensionKey);
         this.extNameVariants = getExtensionNameVariants(this.input.extensionKey);
-        this.folderPath = join(this.input.targetFolder, input.extensionKey);
+        this.folderPath = join(process.cwd(), this.input.targetFolder, input.extensionKey);
     }
 
     public async createObject() {
@@ -39,7 +39,7 @@ class ObjectService {
     }
 
     private async createNewFilesFromTemplate() {
-        const templateFolderPath = join("templates", "object", this.input.version.toString());
+        const templateFolderPath = join(__dirname, "..", "..", "templates", "object", this.input.version.toString());
         const templateFiles = await getFiles(templateFolderPath);
 
         for (const templateFilePath of templateFiles) {
