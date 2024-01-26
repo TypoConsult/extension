@@ -41,10 +41,12 @@ class ExtensionService {
     }
 
     private async copyTemplateFilesToNewFolder() {
+        console.log(__dirname);
         await cp(join("templates", "extension", this.input.version.toString()), this.folderPath, { recursive: true });
     }
 
     private async createExtensionFolder() {
+        console.log(__dirname);
         if (await exists(this.folderPath)) {
             logger.error(`\nThe folder "${this.folderPath}" already exists`);
             process.exit(1);
