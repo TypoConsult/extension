@@ -3,6 +3,9 @@
 .idea
 nbproject
 
+# Documentation
+.phpdoc
+
 # Environment
 .env
 credentials.txt
