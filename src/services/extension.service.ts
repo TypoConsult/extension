@@ -5,6 +5,7 @@ import { logger } from "../utils/logger";
 import { getExtensionNameVariants, replaceExtensionNamePlaceholders } from "../utils/extension.utils";
 import { ExtensionNameVariants } from "../types/extension.types";
 import { exists, getFiles } from "../utils/file.utils";
+import { execSync } from "child_process";
 
 class ExtensionService {
     private readonly folderPath: string;
@@ -12,7 +13,8 @@ class ExtensionService {
 
     constructor(private input: PrompsAnswersInterface) {
         this.nameVariants = getExtensionNameVariants(input.extensionKey);
-        console.log(process.cwd(), process.env.PWD);
+        const result = execSync('pwd').toString().trim();
+        console.log(result);
         this.folderPath = join(process.cwd(), this.input.targetFolder, this.nameVariants.snake);
     }
 
