@@ -24,9 +24,8 @@ class VoilaHook
             return '';
         }
 
-        $contentRepository = GeneralUtility::makeInstance(ContentRepository::class);
         /** @var Content $element */
-        $element = $contentRepository->findByUidRaw($params['element']->getUid());
+        $element = GeneralUtility::makeInstance(ContentRepository::class)->findByUidRaw($params['element']->getUid());
 
         if (!$element) {
             return '';
@@ -36,6 +35,6 @@ class VoilaHook
             $previewItems[] = VoilaUtility::renderBodytext($element);
         }
 
-        return implode('', $previewItems);
+        return implode($previewItems);
     }
 }
