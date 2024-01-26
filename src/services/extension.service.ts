@@ -12,7 +12,7 @@ class ExtensionService {
 
     constructor(private input: PrompsAnswersInterface) {
         this.nameVariants = getExtensionNameVariants(input.extensionKey);
-        this.folderPath = join(this.input.targetFolder, this.nameVariants.snake);
+        this.folderPath = join(process.cwd(), this.input.targetFolder, this.nameVariants.snake);
     }
 
     public async createExtension(): Promise<{ path: string; composerName: string }> {
@@ -41,12 +41,11 @@ class ExtensionService {
     }
 
     private async copyTemplateFilesToNewFolder() {
-        console.log(__dirname);
-        await cp(join("templates", "extension", this.input.version.toString()), this.folderPath, { recursive: true });
+        const templatePath = join(__dirname, "..", "..", "templates", "extension", this.input.version.toString());
+        await cp(templatePath, this.folderPath, { recursive: true });
     }
 
     private async createExtensionFolder() {
-        console.log(__dirname);
         if (await exists(this.folderPath)) {
             logger.error(`\nThe folder "${this.folderPath}" already exists`);
             process.exit(1);
