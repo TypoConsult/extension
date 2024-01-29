@@ -2,11 +2,13 @@
 
 defined('TYPO3') or die('Access denied.');
 
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
 use TYPOCONSULT\extensionNamePascal\Domain\Model\Content;
 use TYPOCONSULT\TcTools\Utilities\LabelUtility;
 
 $table = Content::TABLE_NAME;
-$labelPrefix = LabelUtility::getPath(identifier: 'db') . $table;
+$labelPrefix = LabelUtility::getPath(identifier: 'db', extKey: GeneralConstants::EXT_KEY) . $table;
 
 $pluginName = 'extensionNameClean_plugin';
 $pluginIcon = "extensions-$pluginName";
@@ -21,7 +23,7 @@ $GLOBALS['TCA'][$table]['ctrl']['typeicon_classes'] = array_merge(
 );
 
 // Tell TYPO3 about this plugin
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+ExtensionUtility::registerPlugin(
     'extensionNamePascal',
     'Plugin',
     "$labelPrefix.$pluginName.name",
