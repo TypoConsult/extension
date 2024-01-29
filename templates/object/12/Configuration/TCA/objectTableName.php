@@ -13,8 +13,7 @@ $labelPrefix = LabelUtility::getPath(identifier: 'db') . $table;
 return [
     'ctrl' => [
         'title' => $labelPrefix,
-        'label' => 'title',
-        'tstamp' => 'tstamp',
+        'createdBy' => true,
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
         'delete' => 'deleted',
