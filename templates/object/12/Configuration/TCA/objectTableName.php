@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
 use TYPOCONSULT\extensionNamePascal\Domain\Model\objectNamePascal;
+use TYPOCONSULT\TcTools\Utilities\LabelUtility;
 
 defined('TYPO3') or die('Access denied.');
 
-$extKey = GeneralConstants::EXT_KEY;
 $table = objectNamePascal::TABLE_NAME;
-$labelPrefix = "LLL:EXT:$extKey/Resources/Private/Language/locallang_db.xlf:$table";
-
-// TODO: LabelUtility
+$labelPrefix = LabelUtility::getPath(identifier: 'db') . $table;
 
 return [
     'ctrl' => [
