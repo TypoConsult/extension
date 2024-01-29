@@ -25,7 +25,8 @@ class VoilaHook
         }
 
         /** @var Content $element */
-        $element = GeneralUtility::makeInstance(ContentRepository::class)->findByUidRaw($params['element']->getUid());
+        $contentRepository = GeneralUtility::makeInstance(ContentRepository::class);
+        $element = $contentRepository->findByUidRaw($params['element']->getUid());
 
         if (!$element) {
             return '';

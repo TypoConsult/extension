@@ -8,7 +8,7 @@ return [
     Content::class => [
         'tableName' => Content::TABLE_NAME,
         'properties' => [
-            'xxxxxXxxxxxxx' => [
+            'modelProperty' => [
                 'fieldName' => 'extensionNamePrefixed_field'
             ]
         ]

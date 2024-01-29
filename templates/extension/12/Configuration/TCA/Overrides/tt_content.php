@@ -2,12 +2,11 @@
 
 defined('TYPO3') or die('Access denied.');
 
-use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
 use TYPOCONSULT\extensionNamePascal\Domain\Model\Content;
 use TYPOCONSULT\TcTools\Utilities\LabelUtility;
 
 $table = Content::TABLE_NAME;
-$labelPrefix = LabelUtility::getPath(identifier: 'db', extKey: GeneralConstants::EXT_KEY) . $table;
+$labelPrefix = LabelUtility::getPath(identifier: 'db') . $table;
 
 $pluginName = 'extensionNameClean_plugin';
 $pluginIcon = "extensions-$pluginName";
