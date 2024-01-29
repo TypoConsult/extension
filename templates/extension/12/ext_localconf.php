@@ -2,6 +2,7 @@
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use TYPOCONSULT\extensionNamePascal\Constants\GeneralConstants;
 use TYPOCONSULT\extensionNamePascal\Controller\PluginController;
 use TYPOCONSULT\extensionNamePascal\Hooks\VoilaHook;
 use TYPOCONSULT\TcTools\Utilities\LabelUtility;
@@ -9,7 +10,7 @@ use TYPOCONSULT\TcTools\Utilities\LabelUtility;
 defined('TYPO3') or die('Access denied.');
 
 (function () {
-    $labelPrefix = LabelUtility::getPath(identifier: 'db');
+    $labelPrefix = LabelUtility::getPath(identifier: 'db', extKey: GeneralConstants::EXT_KEY);
 
     ExtensionUtility::configurePlugin(
         'extensionNamePascal',

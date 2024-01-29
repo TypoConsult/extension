@@ -14,4 +14,16 @@ class objectNamePascal extends AbstractEntity
      * @var string
      */
     public string $title = '';
+
+    ######################
+    ## Helper functions ##
+    ######################
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return md5(self::TABLE_NAME . $this->uid . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+    }
 }
