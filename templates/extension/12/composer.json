@@ -31,8 +31,11 @@
     "require": {
         "typo3/cms-core": "^12.4",
         "typo3/cms-extbase": "^12.4",
-        "typoconsult/tc-frontend": "^2.6",
-        "typoconsult/tc-tools": "^2.5",
+        "typo3/cms-fluid": "^12.4",
+        "typo3/cms-frontend": "^12.4",
+        "typoconsult/tc-sys": "^2.3",
+        "typoconsult/tc-frontend": "^2.7",
+        "typoconsult/tc-tools": "^2.3",
         "typoconsult/telemetry-typo3": "^1.1"
     }
 }
