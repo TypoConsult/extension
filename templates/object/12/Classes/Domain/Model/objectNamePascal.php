@@ -24,6 +24,6 @@ class objectNamePascal extends AbstractEntity
      */
     public function getCode(): string
     {
-        return md5($this->uid . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+        return md5(self::TABLE_NAME . $this->uid . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
     }
 }
