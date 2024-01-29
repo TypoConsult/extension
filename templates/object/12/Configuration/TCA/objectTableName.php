@@ -15,7 +15,7 @@ return [
         'title' => $labelPrefix,
         'createdBy' => true,
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
+        'default_sortby' => 'uid DESC',
         'delete' => 'deleted',
         'searchFields' => 'title',
         'typeicon_classes' => ['default' => $table]
