@@ -21,7 +21,7 @@ class PluginController extends ActionController
      */
     public function showAction(): ResponseInterface
     {
-        $uid = $this->request->getAttribute('currentContentObject')->data['uid'] ?? 0;
+        $uid = intval($this->request->getAttribute('currentContentObject')->data['uid'] ?? 0);
         $content = $this->contentRepository->findByUid($uid);
 
         if (!$content) {
