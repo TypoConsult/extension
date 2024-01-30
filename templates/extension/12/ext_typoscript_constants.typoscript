@@ -1,9 +1,0 @@
-plugin {
-    extensionNamePrefixed {
-        view {
-            templateRootPath = EXT:extensionNameSnake/Resources/Private/Templates/
-            partialRootPath = EXT:extensionNameSnake/Resources/Private/Partials/
-            layoutRootPath = EXT:extensionNameSnake/Resources/Private/Layouts/
-        }
-    }
-}
